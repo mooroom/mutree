@@ -24,7 +24,8 @@
     "@tabler/icons-react": "^2.20.0",
     "next": "13.5.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "split-pane-react": "^0.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
