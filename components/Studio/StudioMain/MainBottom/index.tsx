@@ -10,12 +10,15 @@ import {
 export default function MainBottom() {
   const { formattedTime, togglePlay, stop, playState } = useTimer();
 
+  const togglePlayButtonColor = playState !== 'started' ? 'gray.6' : 'teal.8';
+  const playIcon = playState !== 'started' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />;
+
   return (
     <div className={classes.container}>
       <div className={classes.leftgroup}>
         <div className={classes.playStateControls}>
-          <ActionIcon onClick={togglePlay} radius="xl" color="teal.8" size="xl">
-            {playState !== 'started' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />}
+          <ActionIcon onClick={togglePlay} radius="xl" color={togglePlayButtonColor} size="xl">
+            {playIcon}
           </ActionIcon>
           <ActionIcon onClick={stop} variant="outline" radius="xl" color="gray.6" size="xl">
             <IconPlayerStopFilled />

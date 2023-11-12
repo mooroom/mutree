@@ -1,5 +1,5 @@
 import React from 'react';
-import { isToneInitializedAtom, playAtom, timeAtom } from '@/atoms/studio';
+import { isToneInitializedAtom, playStateAtom, timeAtom } from '@/atoms/studio';
 import { useRecoilState } from 'recoil';
 import { formatTimer } from '@/utils/studio';
 import * as Tone from 'tone';
@@ -7,7 +7,7 @@ import * as Tone from 'tone';
 export default function useTimer() {
   const [isToneInitialized, setIsToneInitialized] = useRecoilState(isToneInitializedAtom);
   const [time, setTime] = useRecoilState(timeAtom);
-  const [playState, setPlayState] = useRecoilState(playAtom);
+  const [playState, setPlayState] = useRecoilState(playStateAtom);
 
   React.useEffect(() => {
     let timerId: number | undefined;

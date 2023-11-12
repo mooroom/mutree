@@ -9,6 +9,7 @@
   );
 }
 
+/* splitPane section */
 .splitPane {
   position: relative;
   height: calc(100% - var(--mantine-studio-main-middle-composition-footer-height));
@@ -32,4 +33,22 @@
   height: calc(40% - 2px);
   display: flex;
   background-color: royalblue;
+}
+
+/* scrollLeftBar section */
+.scrollLeftBarSection {
+  height: var(--mantine-studio-main-middle-composition-footer-height);
+  background-color: white;
+  padding-left: 310px;
+  border-top: 1px solid var(--mantine-color-gray-2);
+}
+
+.scrollLeftBar {
+  height: 24px;
+  overflow-x: scroll;
+}
+
+.scrollLeftBar > div {
+  width: var(--mantine-studio-total-width);
+  height: 1px;
 }

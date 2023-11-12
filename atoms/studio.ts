@@ -16,8 +16,8 @@ export const isToneInitializedAtom = atom<boolean>({
   ],
 });
 
-export const playAtom = atom<IStudio.PlayState>({
-  key: 'playAtom',
+export const playStateAtom = atom<IStudio.PlayState>({
+  key: 'playStateAtom',
   default: 'stopped',
   effects_UNSTABLE: [
     ({ onSet }) => {
@@ -47,4 +47,16 @@ export const scrollLeftAtom = atom<number>({
 export const isScrollingAtom = atom<boolean>({
   key: 'isScrollingAtom',
   default: false,
+});
+
+export const bpmAtom = atom<number>({
+  key: 'bpmAtom',
+  default: 120,
+  effects_UNSTABLE: [
+    ({ onSet }) => {
+      onSet((newValue) => {
+        Tone.Transport.bpm.value = newValue;
+      });
+    },
+  ],
 });
