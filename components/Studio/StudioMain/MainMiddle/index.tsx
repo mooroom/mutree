@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import SplitPane, { Pane } from 'split-pane-react';
 import classes from './MainMiddle.module.css';
 
 export default function MainMiddle() {
@@ -9,20 +8,10 @@ export default function MainMiddle() {
 
   return (
     <div className={classes.container}>
-      <div className={classes.splitPaneWrapper}>
-        <SplitPane
-          split="horizontal"
-          sizes={sizes}
-          sashRender={() => <div className={classes.splitter} />}
-          onChange={(s) => setSizes(s)}
-        >
-          <Pane className={classes.pane} minSize={100} maxSize={1000}>
-            <div style={{ height: '100%' }}>dsf</div>
-          </Pane>
-          <Pane className={classes.pane} minSize={100} maxSize={1000}>
-            <div style={{ height: '100%' }}>dsfs</div>
-          </Pane>
-        </SplitPane>
+      <div className={classes.splitPane}>
+        <div className={classes.pane1} />
+        <div className={classes.splitter} />
+        <div className={classes.pane2} />
       </div>
     </div>
   );

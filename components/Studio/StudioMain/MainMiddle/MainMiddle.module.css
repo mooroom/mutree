@@ -9,20 +9,27 @@
   );
 }
 
-.splitPaneWrapper {
+.splitPane {
   position: relative;
   height: calc(100% - var(--mantine-studio-main-middle-composition-footer-height));
   background-color: greenyellow;
 }
 
 .splitter {
-  height: 100%;
+  height: 4px;
   background-color: var(--mantine-color-gray-4);
   border-top: 1px solid white;
   border-bottom: 1px solid white;
 }
 
-.pane {
-  height: 100%;
+.pane1 {
+  height: calc(60% - 2px);
   display: flex;
+  background-color: rosybrown;
+}
+
+.pane2 {
+  height: calc(40% - 2px);
+  display: flex;
+  background-color: royalblue;
 }

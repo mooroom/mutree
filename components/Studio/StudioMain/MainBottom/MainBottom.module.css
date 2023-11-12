@@ -6,3 +6,23 @@
   border-top: 1px solid var(--mantine-color-gray-4);
   padding: 0 20px;
 }
+
+.leftgroup {
+  display: flex;
+  align-items: center;
+}
+
+.rightgroup {
+  display: flex;
+  align-items: center;
+}
+
+.playStateControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer {
+  margin-left: 10px;
+}
