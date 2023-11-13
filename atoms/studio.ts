@@ -49,6 +49,11 @@ export const isScrollingAtom = atom<boolean>({
   default: false,
 });
 
+export const isPlayheadInvisibleAtom = atom<boolean>({
+  key: 'isPlayheadInvisibleAtom',
+  default: false,
+});
+
 export const bpmAtom = atom<number>({
   key: 'bpmAtom',
   default: 120,
@@ -59,4 +64,14 @@ export const bpmAtom = atom<number>({
       });
     },
   ],
+});
+
+export const numerAtom = atom<IStudio.Numerator>({
+  key: 'numerAtom',
+  default: 6,
+});
+
+export const denomAtom = atom<IStudio.Denominator>({
+  key: 'denomAtom',
+  default: 8,
 });

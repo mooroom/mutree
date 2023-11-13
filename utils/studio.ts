@@ -14,7 +14,7 @@ export function formatTimer(time: number) {
 }
 
 export function getAbsoluteScrollLeftPosition(bpm: number) {
-  const currentTime = Tone.Transport.now();
+  const currentTime = Tone.Transport.seconds;
   const totalTime = (1 / ((bpm / 60) * 4)) * TOTAL_STEPS;
 
   return (currentTime / totalTime) * TOTAL_WIDTH;

@@ -1,4 +1,4 @@
-import useTimer from '@/hooks/studio/useTimer';
+import usePlayControls from '@/hooks/studio/usePlayControls';
 import classes from './MainBottom.module.css';
 import { ActionIcon, Text } from '@mantine/core';
 import {
@@ -8,7 +8,7 @@ import {
 } from '@tabler/icons-react';
 
 export default function MainBottom() {
-  const { formattedTime, togglePlay, stop, playState } = useTimer();
+  const { formattedTime, togglePlay, stop, playState } = usePlayControls();
 
   const togglePlayButtonColor = playState !== 'started' ? 'gray.6' : 'teal.8';
   const playIcon = playState !== 'started' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />;

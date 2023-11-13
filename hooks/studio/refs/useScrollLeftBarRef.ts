@@ -1,4 +1,10 @@
-import { bpmAtom, isScrollingAtom, playStateAtom, scrollLeftAtom } from '@/atoms/studio';
+import {
+  bpmAtom,
+  isPlayheadInvisibleAtom,
+  isScrollingAtom,
+  playStateAtom,
+  scrollLeftAtom,
+} from '@/atoms/studio';
 import { getAbsoluteScrollLeftPosition } from '@/utils/studio';
 import React from 'react';
 import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
@@ -8,6 +14,7 @@ export default function useScrollLeftBar() {
   const setIsScrolling = useSetRecoilState(isScrollingAtom);
   const playState = useRecoilValue(playStateAtom);
   const bpmState = useRecoilValue(bpmAtom);
+  const isPlayheadInvisible = useRecoilValue(isPlayheadInvisibleAtom);
 
   const scrollLeftBarRef = React.useRef<HTMLDivElement>(null);
 
@@ -35,9 +42,9 @@ export default function useScrollLeftBar() {
       setIsScrolling(true);
     };
     const handleMouseUp = () => {
-      if (playState !== 'started') return;
+      if (playState !== 'started' || !isPlayheadInvisible) return;
 
-      scrollLeftBar.scrollLeft = getAbsoluteScrollLeftPosition(bpmState) - 100;
+      scrollLeftBar.scrollLeft = getAbsoluteScrollLeftPosition(bpmState);
       setIsScrolling(false);
     };
 
@@ -48,7 +55,7 @@ export default function useScrollLeftBar() {
       scrollLeftBar.removeEventListener('mousedown', handleMouseDown);
       scrollLeftBar.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [setIsScrolling, playState, bpmState]);
+  }, [setIsScrolling, playState, bpmState, isPlayheadInvisible]);
 
   // observe scrollLeft
   React.useEffect(() => {
@@ -58,7 +65,5 @@ export default function useScrollLeftBar() {
     scrollLeftBar.scrollLeft = scrolLeft;
   }, [scrolLeft]);
 
-  return {
-    scrollLeftBarRef,
-  };
+  return scrollLeftBarRef;
 }

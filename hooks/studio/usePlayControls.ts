@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { formatTimer } from '@/utils/studio';
 import * as Tone from 'tone';
 
-export default function useTimer() {
+export default function usePlayControls() {
   const [isToneInitialized, setIsToneInitialized] = useRecoilState(isToneInitializedAtom);
   const [time, setTime] = useRecoilState(timeAtom);
   const [playState, setPlayState] = useRecoilState(playStateAtom);
@@ -13,16 +13,13 @@ export default function useTimer() {
     let timerId: number | undefined;
 
     if (playState === 'started') {
-      const startTime = Tone.now() - time;
-
       timerId = Tone.Transport.scheduleRepeat(() => {
-        const elapsedTime = Tone.now() - startTime;
-        setTime(elapsedTime);
+        setTime(Tone.Transport.seconds);
       }, 0.01);
-    } else {
-      if (timerId !== undefined) {
-        Tone.Transport.clear(timerId);
-      }
+    } else if (playState === 'paused') {
+      Tone.Transport.pause();
+    } else if (playState === 'stopped') {
+      Tone.Transport.stop();
     }
 
     return () => {
@@ -55,7 +52,6 @@ export default function useTimer() {
   }, [setPlayState, setTime]);
 
   return {
-    time,
     formattedTime,
     playState,
     togglePlay,

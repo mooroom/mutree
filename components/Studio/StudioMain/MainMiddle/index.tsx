@@ -1,9 +1,9 @@
 import React from 'react';
 import classes from './MainMiddle.module.css';
-import useScrollLeftBar from '@/hooks/studio/useScrollLeftBar';
+import useScrollLeftBarRef from '@/hooks/studio/refs/useScrollLeftBarRef';
 
 export default function MainMiddle() {
-  const { scrollLeftBarRef } = useScrollLeftBar();
+  const scrollLeftBarRef = useScrollLeftBarRef();
 
   return (
     <div className={classes.container}>

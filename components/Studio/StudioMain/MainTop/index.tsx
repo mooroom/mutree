@@ -4,10 +4,15 @@ import { ActionIcon, Button, ButtonGroup } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { IconEqual } from '@tabler/icons-react';
 import classes from './MainTop.module.css';
+import useBeatRulerAxisRef from '@/hooks/studio/refs/useBeatRulerAxisRef';
+import useTimeLine from '@/hooks/studio/useTimeLine';
 
 export default function MainTop() {
   const [value1, toggle1] = useToggle(['teal.5', 'gray.5']);
   const [value2, toggle2] = useToggle(['cyan.5', 'gray.5']);
+
+  const { beatRulerRef, playheadRef } = useTimeLine();
+  const beatRulerAxisRef = useBeatRulerAxisRef();
 
   return (
     <div className={classes.container}>
@@ -38,11 +43,11 @@ export default function MainTop() {
       </div>
       <div className={classes.compositionHeader}>
         <div className={classes.timelineControls}>
-          <div className={classes.beatRuler}>
-            <canvas className={classes.axisCanvas} />
+          <div className={classes.beatRuler} ref={beatRulerRef}>
+            <canvas className={classes.axisCanvas} ref={beatRulerAxisRef} />
           </div>
           <div className={classes.cycleMarker} />
-          <div className={classes.playhead}>
+          <div className={classes.playhead} ref={playheadRef}>
             <div className={classes.playheadBody} />
             <div className={classes.playheadHead} />
           </div>

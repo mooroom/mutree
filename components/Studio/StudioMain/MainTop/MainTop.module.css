@@ -36,6 +36,7 @@
 .compositionHeader {
   position: relative;
   flex: 1;
+  background-color: var(--mantine-color-gray-5);
 }
 
 .timelineControls {
