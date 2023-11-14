@@ -13,7 +13,7 @@ export default function useScrollLeftBar() {
   const [scrolLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const setIsScrolling = useSetRecoilState(isScrollingAtom);
   const playState = useRecoilValue(playStateAtom);
-  const bpmState = useRecoilValue(bpmAtom);
+  const bpm = useRecoilValue(bpmAtom);
   const isPlayheadInvisible = useRecoilValue(isPlayheadInvisibleAtom);
 
   const scrollLeftBarRef = React.useRef<HTMLDivElement>(null);
@@ -44,7 +44,7 @@ export default function useScrollLeftBar() {
     const handleMouseUp = () => {
       if (playState !== 'started' || !isPlayheadInvisible) return;
 
-      scrollLeftBar.scrollLeft = getAbsoluteScrollLeftPosition(bpmState);
+      scrollLeftBar.scrollLeft = getAbsoluteScrollLeftPosition(bpm);
       setIsScrolling(false);
     };
 
@@ -55,7 +55,7 @@ export default function useScrollLeftBar() {
       scrollLeftBar.removeEventListener('mousedown', handleMouseDown);
       scrollLeftBar.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [setIsScrolling, playState, bpmState, isPlayheadInvisible]);
+  }, [setIsScrolling, playState, bpm, isPlayheadInvisible]);
 
   // observe scrollLeft
   React.useEffect(() => {

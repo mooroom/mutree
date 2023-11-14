@@ -13,9 +13,13 @@ export function formatTimer(time: number) {
   return `${minutesString}:${secondsString}.${milliseconds}`;
 }
 
+export function getDurationOfSixteenth(bpm: number) {
+  return 1 / ((bpm / 60) * 4);
+}
+
 export function getAbsoluteScrollLeftPosition(bpm: number) {
   const currentTime = Tone.Transport.seconds;
-  const totalTime = (1 / ((bpm / 60) * 4)) * TOTAL_STEPS;
+  const totalTime = TOTAL_STEPS * getDurationOfSixteenth(bpm);
 
   return (currentTime / totalTime) * TOTAL_WIDTH;
 }

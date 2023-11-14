@@ -6,9 +6,10 @@ import {
   scrollLeftAtom,
   timeAtom,
 } from '@/atoms/studio';
-import { getAbsoluteScrollLeftPosition } from '@/utils/studio';
+import { getAbsoluteScrollLeftPosition, getDurationOfSixteenth } from '@/utils/studio';
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import * as Tone from 'tone';
 
 export default function useTimeLine() {
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
@@ -20,6 +21,16 @@ export default function useTimeLine() {
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
   const playheadRef = React.useRef<HTMLDivElement>(null);
+
+  const jumpToTime = React.useCallback(
+    (timelinePosition: number) => {
+      const jumpTime = timelinePosition * getDurationOfSixteenth(bpm);
+      Tone.Transport.seconds = jumpTime;
+
+      setTime(jumpTime);
+    },
+    [setTime, bpm]
+  );
 
   React.useEffect(() => {
     const beatRuler = beatRulerRef.current;
@@ -46,10 +57,11 @@ export default function useTimeLine() {
     ) {
       setScrollLeft(scrollLeft + (beatRuler.clientWidth - 200));
     }
-  }, [scrollLeft, time, bpm, isScrolling, playState, setScrollLeft]);
+  }, [scrollLeft, time, bpm, isScrolling, playState, setScrollLeft, setIsPlayheadInvisible]);
 
   return {
     beatRulerRef,
     playheadRef,
+    jumpToTime,
   };
 }
