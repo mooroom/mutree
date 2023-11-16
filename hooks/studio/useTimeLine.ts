@@ -51,13 +51,13 @@ export default function useTimeLine() {
 
     // scroll to playhead it it's near the edga, only if playState is started and isScrolling is false
     if (
-      relativeScrollLeft > beatRuler.clientWidth - 100 &&
+      relativeScrollLeft > beatRuler.clientWidth - 50 &&
       !isScrolling &&
       playState === 'started'
     ) {
-      setScrollLeft(scrollLeft + (beatRuler.clientWidth - 200));
+      setScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
     }
-  }, [scrollLeft, time, bpm, isScrolling, playState, setScrollLeft, setIsPlayheadInvisible]);
+  }, [time, scrollLeft, bpm, isScrolling, playState, setIsPlayheadInvisible, setScrollLeft]);
 
   return {
     beatRulerRef,

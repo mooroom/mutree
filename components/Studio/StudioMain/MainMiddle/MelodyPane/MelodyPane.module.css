@@ -1,0 +1,38 @@
+.melodyPane {
+  height: calc(60% - 2px);
+  display: flex;
+  background-color: rosybrown;
+}
+
+.paneLeft {
+  width: 250px;
+  height: 100%;
+  background-color: white;
+  padding: 20px;
+  border-right: 1px solid var(--mantine-color-gray-2);
+}
+
+.paneRight {
+  flex: 1;
+}
+
+.instControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.instControlRight {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 144px;
+}
+
+.noteControls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}

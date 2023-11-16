@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil';
 import * as IStudio from '@/types/studio';
 import * as Tone from 'tone';
+import getScale from '@/utils/studio';
 
 export const isToneInitializedAtom = atom<boolean>({
   key: 'isToneInitializedAtom',
@@ -74,4 +75,24 @@ export const numerAtom = atom<IStudio.Numerator>({
 export const denomAtom = atom<IStudio.Denominator>({
   key: 'denomAtom',
   default: 8,
+});
+
+export const melodyRootNoteAtom = atom({
+  key: 'rootNoteAtom',
+  default: 0,
+});
+
+export const melodyScaleNameAtom = atom<IStudio.ScaleName>({
+  key: 'scaleNameAtom',
+  default: 'major',
+});
+
+export const melodyScaleAtom = selector({
+  key: 'scaleAtom',
+  get: ({ get }) => {
+    const rootNote = get(melodyRootNoteAtom);
+    const scaleName = get(melodyScaleNameAtom);
+
+    return getScale(rootNote, scaleName);
+  },
 });

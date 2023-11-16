@@ -1,6 +1,8 @@
 import React from 'react';
 import classes from './MainMiddle.module.css';
 import useScrollLeftBarRef from '@/hooks/studio/refs/useScrollLeftBarRef';
+import MelodyPane from './MelodyPane';
+import RhythmPane from './RhythmPane';
 
 export default function MainMiddle() {
   const scrollLeftBarRef = useScrollLeftBarRef();
@@ -8,9 +10,9 @@ export default function MainMiddle() {
   return (
     <div className={classes.container}>
       <div className={classes.splitPane}>
-        <div className={classes.pane1} />
+        <MelodyPane />
         <div className={classes.splitter} />
-        <div className={classes.pane2} />
+        <RhythmPane />
       </div>
       <div className={classes.scrollLeftBarSection}>
         <div className={classes.scrollLeftBar} ref={scrollLeftBarRef}>

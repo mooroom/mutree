@@ -1,6 +1,6 @@
 import React from 'react';
-import { isToneInitializedAtom, playStateAtom, timeAtom } from '@/atoms/studio';
-import { useRecoilState } from 'recoil';
+import { isToneInitializedAtom, playStateAtom, scrollLeftAtom, timeAtom } from '@/atoms/studio';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { formatTimer } from '@/utils/studio';
 import * as Tone from 'tone';
 
@@ -8,6 +8,7 @@ export default function usePlayControls() {
   const [isToneInitialized, setIsToneInitialized] = useRecoilState(isToneInitializedAtom);
   const [time, setTime] = useRecoilState(timeAtom);
   const [playState, setPlayState] = useRecoilState(playStateAtom);
+  const setScrollLeft = useSetRecoilState(scrollLeftAtom);
 
   React.useEffect(() => {
     let timerId: number | undefined;
@@ -49,7 +50,8 @@ export default function usePlayControls() {
   const stop = React.useCallback(() => {
     setPlayState('stopped');
     setTime(0);
-  }, [setPlayState, setTime]);
+    setScrollLeft(0);
+  }, [setPlayState, setTime, setScrollLeft]);
 
   return {
     formattedTime,

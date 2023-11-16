@@ -1,5 +1,7 @@
 import * as Tone from 'tone';
-import { TOTAL_STEPS, TOTAL_WIDTH } from '@/constants/studio';
+import { ROOT_NOTES, TOTAL_STEPS, TOTAL_WIDTH } from '@/constants/studio';
+import { ScaleName } from '@/types/studio';
+import { Scale } from 'tonal';
 
 // time utils
 export function formatTimer(time: number) {
@@ -22,4 +24,12 @@ export function getAbsoluteScrollLeftPosition(bpm: number) {
   const totalTime = TOTAL_STEPS * getDurationOfSixteenth(bpm);
 
   return (currentTime / totalTime) * TOTAL_WIDTH;
+}
+
+// scale utils
+export default function getScale(root: number, scaleName: ScaleName) {
+  const rootNote = ROOT_NOTES[scaleName][root];
+  const scale = Scale.rangeOf(`${rootNote} ${scaleName}`);
+
+  return scale(`${rootNote}5`, `${rootNote}2`);
 }

@@ -23,18 +23,6 @@
   border-bottom: 1px solid white;
 }
 
-.pane1 {
-  height: calc(60% - 2px);
-  display: flex;
-  background-color: rosybrown;
-}
-
-.pane2 {
-  height: calc(40% - 2px);
-  display: flex;
-  background-color: royalblue;
-}
-
 /* scrollLeftBar section */
 .scrollLeftBarSection {
   height: var(--mantine-studio-main-middle-composition-footer-height);

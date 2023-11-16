@@ -1,0 +1,69 @@
+.scrollable {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background-color: var(--mantine-color-gray-0);
+}
+
+.keysAndGridWrapper {
+  height: calc(var(--mantine-studio-melody-unit-num) * var(--mantine-studio-melody-unit-height));
+  margin: 50px 0;
+  background-color: var(--mantine-color-gray-0);
+}
+
+.keysAndGrid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.keys {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  box-shadow: 2px 0px 2px 0px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.key {
+  width: 100%;
+  height: var(--mantine-studio-melody-unit-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.key:nth-of-type(7n + 1) {
+  background-color: var(--mantine-color-teal-6);
+}
+
+.key:nth-of-type(odd) {
+  background-color: var(--mantine-color-gray-3);
+}
+
+.key:nth-of-type(even) {
+  background-color: var(--mantine-color-gray-4);
+}
+
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-left: 60px solid transparent;
+}
+
+.gridLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

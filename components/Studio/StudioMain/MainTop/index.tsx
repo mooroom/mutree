@@ -17,13 +17,14 @@ export default function MainTop() {
 
   const { beatRulerRef, playheadRef, jumpToTime } = useTimeLine();
   const beatRulerAxisRef = useBeatRulerAxisRef();
+  const timelineRef = React.useRef<HTMLDivElement>(null);
 
   const handleClickTimeline = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      const beatRuler = beatRulerRef.current;
-      if (!beatRuler) return;
+      const timeline = timelineRef.current;
+      if (!timeline) return;
 
-      const offsetX = e.clientX - beatRuler.getBoundingClientRect().left;
+      const offsetX = e.clientX - timeline.getBoundingClientRect().left;
       const absolutePosition = offsetX + scrollLeft;
       const timelinePosition = Math.floor(absolutePosition / STEP_WIDTH);
       jumpToTime(timelinePosition);
@@ -59,7 +60,7 @@ export default function MainTop() {
         </ActionIcon>
       </div>
       <div className={classes.compositionHeader}>
-        <div className={classes.timelineControls} onClick={handleClickTimeline}>
+        <div className={classes.timelineControls} ref={timelineRef} onClick={handleClickTimeline}>
           <div className={classes.beatRuler} ref={beatRulerRef}>
             <canvas className={classes.axisCanvas} ref={beatRulerAxisRef} />
           </div>

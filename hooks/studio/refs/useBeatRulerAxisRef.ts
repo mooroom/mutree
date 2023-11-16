@@ -14,12 +14,12 @@ export default function useBeatRulerAxisRef() {
 
       for (let i = 0; i < numLines; i++) {
         const x = i * gap - (scrollLeft % gap);
-        ctx.beginPath();
 
         const mark = Math.floor((i * gap + scrollLeft) / gap);
         const stepsPerBeat = 16 / denom;
         const isBar = mark % (numer * stepsPerBeat) === 0;
 
+        ctx.beginPath();
         if (isBar) {
           // numer state
           ctx.moveTo(x, 0);

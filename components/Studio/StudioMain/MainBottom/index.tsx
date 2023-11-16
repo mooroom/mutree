@@ -11,13 +11,20 @@ export default function MainBottom() {
   const { formattedTime, togglePlay, stop, playState } = usePlayControls();
 
   const togglePlayButtonColor = playState !== 'started' ? 'gray.6' : 'teal.8';
+  const togglePlayButtonVariant = playState !== 'started' ? 'outline' : 'filled';
   const playIcon = playState !== 'started' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />;
 
   return (
     <div className={classes.container}>
       <div className={classes.leftgroup}>
         <div className={classes.playStateControls}>
-          <ActionIcon onClick={togglePlay} radius="xl" color={togglePlayButtonColor} size="xl">
+          <ActionIcon
+            onClick={togglePlay}
+            variant={togglePlayButtonVariant}
+            radius="xl"
+            color={togglePlayButtonColor}
+            size="xl"
+          >
             {playIcon}
           </ActionIcon>
           <ActionIcon onClick={stop} variant="outline" radius="xl" color="gray.6" size="xl">
