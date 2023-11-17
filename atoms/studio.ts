@@ -77,6 +77,11 @@ export const denomAtom = atom<IStudio.Denominator>({
   default: 8,
 });
 
+export const resolutionAtom = atom<IStudio.Resolution>({
+  key: 'resolutionAtom',
+  default: '16n',
+});
+
 export const melodyRootNoteAtom = atom({
   key: 'rootNoteAtom',
   default: 0,

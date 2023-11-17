@@ -1,11 +1,12 @@
 import usePlayControls from '@/hooks/studio/usePlayControls';
 import classes from './MainBottom.module.css';
-import { ActionIcon, Text } from '@mantine/core';
+import { ActionIcon, Divider, Group, Text } from '@mantine/core';
 import {
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconPlayerStopFilled,
 } from '@tabler/icons-react';
+import { BpmControl, DenomNumerControl, ResolutionControl } from './Controls';
 
 export default function MainBottom() {
   const { formattedTime, togglePlay, stop, playState } = usePlayControls();
@@ -35,6 +36,13 @@ export default function MainBottom() {
           <Text size="xl">{formattedTime}</Text>
         </div>
       </div>
+      <Group className={classes.rightgroup} gap="lg">
+        <ResolutionControl />
+        <Divider orientation="vertical" />
+        <DenomNumerControl />
+        <Divider orientation="vertical" />
+        <BpmControl />
+      </Group>
     </div>
   );
 }
