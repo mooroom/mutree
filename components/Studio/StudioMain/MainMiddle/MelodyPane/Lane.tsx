@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { UnstyledButton, useMantineTheme } from '@mantine/core';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM } from '@/constants/studio';
+import FlexNote from '../FlexNote';
 
 export default function Lane() {
   const melodyScale = useRecoilValue(melodyScaleAtom);
@@ -28,7 +29,19 @@ export default function Lane() {
           </div>
           <div className={classes.grid}>
             <canvas className={classes.gridLines} ref={gridLinesRef} />
-            <div className={classes.regionNotes}></div>
+            <div className={classes.regionNotes}>
+              <FlexNote
+                id={'1'}
+                left={0}
+                top={0}
+                steps={1}
+                unitHeight={MELODY_UNIT_HEIGHT}
+                onResizeNote={() => {}}
+                onDragNote={() => {}}
+                onEditNote={() => {}}
+                onDeleteNote={() => {}}
+              />
+            </div>
           </div>
         </div>
       </div>
