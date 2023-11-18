@@ -27,9 +27,30 @@ export function getAbsoluteScrollLeftPosition(bpm: number) {
 }
 
 // scale utils
-export default function getScale(root: number, scaleName: ScaleName) {
-  const rootNote = ROOT_NOTES[scaleName][root];
-  const scale = Scale.rangeOf(`${rootNote} ${scaleName}`);
 
-  return scale(`${rootNote}5`, `${rootNote}2`);
+const KO_NOTE_NAME: { [key: string]: string } = {
+  C: '도',
+  D: '레',
+  E: '미',
+  F: '파',
+  G: '솔',
+  A: '라',
+  B: '시',
+};
+
+export function getMelodyKeys(root: number, scaleName: ScaleName) {
+  const rootNote = ROOT_NOTES[scaleName][root];
+  const scale = Scale.rangeOf(`${rootNote} ${scaleName}`)(`${rootNote}5`, `${rootNote}2`);
+
+  return scale.map((value: string | undefined) => {
+    const pitch = Tone.Frequency(value).toMidi();
+
+    return {
+      pitch,
+      noteName: {
+        ko: `${KO_NOTE_NAME[value![0]]}${value![1]}${value![2] ?? ''}`,
+        en: value!,
+      },
+    };
+  });
 }

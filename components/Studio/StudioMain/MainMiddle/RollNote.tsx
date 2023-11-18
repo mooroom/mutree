@@ -1,6 +1,7 @@
 import { STEP_WIDTH } from '@/constants/studio';
-import classes from './FlexNote.module.css';
+import classes from './RollNote.module.css';
 import React from 'react';
+import { MantineColor, useMantineTheme } from '@mantine/core';
 
 interface Props {
   id: string;
@@ -8,23 +9,31 @@ interface Props {
   top: number;
   steps: number;
   unitHeight: number;
+  color: MantineColor;
   onResizeNote: (resizing: boolean) => void;
   onDragNote: (dragging: boolean) => void;
   onEditNote: (id: string, nextLeft: number, nextTop: number, nextSteps: number) => void;
   onDeleteNote: (id: string) => void;
 }
 
-export default function FlexNote({
+export default function RollNote({
   id,
   left,
   top,
   steps,
+  color,
   unitHeight,
   onResizeNote,
   onDragNote,
   onEditNote,
   onDeleteNote,
 }: Props) {
+  const theme = useMantineTheme();
+  const colorStyles: React.CSSProperties = {
+    backgroundColor: theme.colors[color][5],
+    borderColor: theme.colors[color][7],
+  };
+
   const [selected, setSelected] = React.useState(false);
 
   const handleMouseDownHead = React.useCallback(
@@ -96,7 +105,7 @@ export default function FlexNote({
   return (
     <div
       className={classes.container}
-      style={{ left, top, width: steps * STEP_WIDTH }}
+      style={{ left, top, width: steps * STEP_WIDTH, height: unitHeight, ...colorStyles }}
       onMouseDown={handleMouseDownContainer}
       onDoubleClick={handleDoubleClick}
       data-selected={selected}

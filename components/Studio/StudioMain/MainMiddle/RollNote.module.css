@@ -3,10 +3,9 @@
   top: 0;
   left: 0;
   width: 20;
-  height: var(--mantine-studio-melody-unit-height);
-  background-color: var(--mantine-color-teal-5);
-  border: 1px solid var(--mantine-color-teal-7);
   border-radius: 2px;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .container[data-selected='true'] {
