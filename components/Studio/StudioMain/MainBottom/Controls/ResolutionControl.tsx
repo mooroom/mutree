@@ -17,19 +17,19 @@ export default function ResolutionControl() {
   const options = [
     <Combobox.Option value={RESOLUTIONS[0]} key={RESOLUTIONS[0]}>
       <Group>
-        <Image src="/studio/4n.svg" width={16} height={16} alt="4n" />
+        <Image src="/studio/images/4n.svg" width={16} height={16} alt="4n" />
         <span>4분음표</span>
       </Group>
     </Combobox.Option>,
     <Combobox.Option value={RESOLUTIONS[1]} key={RESOLUTIONS[1]}>
       <Group>
-        <Image src="/studio/8n.svg" width={16} height={16} alt="8n" />
+        <Image src="/studio/images/8n.svg" width={16} height={16} alt="8n" />
         <span>8분음표</span>
       </Group>
     </Combobox.Option>,
     <Combobox.Option value={RESOLUTIONS[2]} key={RESOLUTIONS[2]}>
       <Group>
-        <Image src="/studio/16n.svg" width={16} height={16} alt="16n" />
+        <Image src="/studio/images/16n.svg" width={16} height={16} alt="16n" />
         <span>16분음표</span>
       </Group>
     </Combobox.Option>,

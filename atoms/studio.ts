@@ -89,10 +89,10 @@ export const melodyRootNoteAtom = atom({
 
 export const melodyScaleNameAtom = atom<IStudio.ScaleName>({
   key: 'scaleNameAtom',
-  default: 'minor',
+  default: 'major',
 });
 
-export const melodyKeysAtom = selector({
+export const melodyKeysAtom = selector<IStudio.MutreeKey[]>({
   key: 'melodyKeysAtom',
   get: ({ get }) => {
     const rootNote = get(melodyRootNoteAtom);

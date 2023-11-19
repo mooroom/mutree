@@ -1,0 +1,107 @@
+import { ToneEvent } from 'tone';
+import type { Time } from 'tone/build/esm/core/type/Units';
+import MutreeInstrument from './MutreeInstrument';
+
+type Nullable<T> = T | null;
+
+export default class MutreeEvent {
+  private _event: ToneEvent;
+  private _instrument: Nullable<MutreeInstrument>;
+  private _time: Time;
+  private _duration: Time;
+
+  constructor(instrument: Nullable<MutreeInstrument>, time: Time, duration: Time) {
+    if (instrument === null) {
+      throw new Error('invalid instrument');
+    }
+
+    this._event = new ToneEvent();
+    this._instrument = instrument;
+    this._time = time;
+    this._duration = duration;
+
+    this._instrument.playOnce();
+    this._event.callback = () => {
+      this._instrument?.play(this._duration);
+    };
+    this._event.start(this._time);
+  }
+
+  // Update the event with new instrument, time and duration
+  update(instrument: Nullable<MutreeInstrument>, time: Time, duration: Time) {
+    this._instrument = instrument;
+    this._time = time;
+    this._duration = duration;
+
+    this._event.callback = () => {
+      this._instrument?.play(this._duration);
+    };
+    this._event.start(this._time);
+
+    return this;
+  }
+
+  // Update the instrument of the event
+  updateInstrument(instrument: Nullable<MutreeInstrument>) {
+    this.update(instrument, this._time, this._duration);
+
+    return this;
+  }
+
+  // Update the time of the event
+  updateTime(time: Time) {
+    if (this._instrument === null) {
+      throw new Error('invalid instrument');
+    }
+    this.update(this._instrument, time, this._duration);
+
+    return this;
+  }
+
+  // Update the duration of the event
+  updateDuration(duration: Time) {
+    if (this._instrument === null) {
+      throw new Error('invalid instrument');
+    }
+    this.update(this._instrument, this._time, duration);
+
+    return this;
+  }
+
+  // Delete the event
+  delete() {
+    this._event.dispose();
+  }
+
+  // Getter and setter methods
+  get event() {
+    return this._event;
+  }
+
+  get instrument() {
+    if (this._instrument === null) {
+      throw new Error('invalid instrument');
+    }
+    return this._instrument;
+  }
+
+  set instrument(instrument: Nullable<MutreeInstrument>) {
+    this._instrument = instrument;
+  }
+
+  get time() {
+    return this._time;
+  }
+
+  set time(time: Time) {
+    this._time = time;
+  }
+
+  get duration() {
+    return this._duration;
+  }
+
+  set duration(duration: Time) {
+    this._duration = duration;
+  }
+}

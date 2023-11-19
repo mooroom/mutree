@@ -10,9 +10,11 @@ interface Props {
   steps: number;
   unitHeight: number;
   color: MantineColor;
-  onResizeNote: (resizing: boolean) => void;
-  onDragNote: (dragging: boolean) => void;
-  onEditNote: (id: string, nextLeft: number, nextTop: number, nextSteps: number) => void;
+  onSetIsResizing: (resizing: boolean) => void;
+  onSetIsDragging: (dragging: boolean) => void;
+  onResizeNote: (id: string, nextSteps: number) => void;
+  onDragNoteLeft: (id: string, nextLeft: number) => void;
+  onDragNoteTop: (id: string, nextTop: number) => void;
   onDeleteNote: (id: string) => void;
 }
 
@@ -24,8 +26,10 @@ export default function RollNote({
   color,
   unitHeight,
   onResizeNote,
-  onDragNote,
-  onEditNote,
+  onSetIsDragging,
+  onSetIsResizing,
+  onDragNoteTop,
+  onDragNoteLeft,
   onDeleteNote,
 }: Props) {
   const theme = useMantineTheme();
@@ -39,7 +43,7 @@ export default function RollNote({
   const handleMouseDownHead = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
-      onResizeNote(true);
+      onSetIsResizing(true);
       setSelected(true);
 
       const startX = e.clientX;
@@ -48,11 +52,11 @@ export default function RollNote({
         const dx = event.clientX - startX;
         const nextSteps = Math.floor(dx / STEP_WIDTH) + steps;
         if (nextSteps < 1) return;
-        onEditNote(id, left, top, nextSteps);
+        onResizeNote(id, nextSteps);
       };
 
       const handleMouseUp = () => {
-        onResizeNote(false);
+        onSetIsResizing(false);
         setSelected(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -61,13 +65,13 @@ export default function RollNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onEditNote, id, left, steps, top]
+    [onResizeNote, id, steps, onSetIsResizing]
   );
 
   const handleMouseDownContainer = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
-      onDragNote(true);
+      onSetIsDragging(true);
       setSelected(true);
 
       const startX = e.clientX;
@@ -82,11 +86,12 @@ export default function RollNote({
         if (nextLeft < 0 || nextTop < 0) return;
         if (nextLeft === left && nextTop === top) return;
 
-        onEditNote(id, Math.max(0, nextLeft), Math.max(0, nextTop), steps);
+        if (nextLeft !== left) onDragNoteLeft(id, nextLeft);
+        if (nextTop !== top) onDragNoteTop(id, nextTop);
       };
 
       const handleMouseUp = () => {
-        onDragNote(false);
+        onSetIsDragging(false);
         setSelected(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -95,7 +100,7 @@ export default function RollNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onEditNote, id, left, steps, top, unitHeight]
+    [onDragNoteLeft, onDragNoteTop, id, left, top, unitHeight, onSetIsDragging]
   );
 
   const handleDoubleClick = React.useCallback(() => {
