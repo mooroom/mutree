@@ -31,8 +31,6 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   const regionRef = React.useRef<HTMLDivElement>(null);
   const noteIdRef = React.useRef(0);
 
-  console.log(rollNotes);
-
   const getNoteId = React.useCallback(() => {
     noteIdRef.current += 1;
     return `${idPrefix}-note-${noteIdRef.current}`;
@@ -55,11 +53,9 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
 
       const pitch = keys[pitchPosition].pitch;
       const inst = audio[pitch];
-      console.log(audio);
-      console.log(pitch, inst);
 
       const startTime = timelinePosition * getDurationOfSixteenth(bpm);
-      const duration = NOTE_WIDTH[resolution] * getDurationOfSixteenth(bpm);
+      const duration = (NOTE_WIDTH[resolution] / STEP_WIDTH) * getDurationOfSixteenth(bpm);
 
       const newNote: RollNote = {
         id: getNoteId(),
@@ -81,7 +77,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
           return {
             ...note,
             steps: nextSteps,
-            event: note.event.updateDuration(nextSteps * STEP_WIDTH * getDurationOfSixteenth(bpm)),
+            event: note.event.updateDuration(nextSteps * getDurationOfSixteenth(bpm)),
           };
         }
         return note;
@@ -92,29 +88,11 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
     [rollNotes, bpm]
   );
 
-  const handleDragNoteLeft = React.useCallback(
-    (id: string, nextLeft: number) => {
+  const handleDragNote = React.useCallback(
+    (id: string, nextLeft: number, nextTop: number) => {
       const absoluteX = nextLeft + scrollLeft;
       const timelinePosition = Math.floor(absoluteX / STEP_WIDTH);
 
-      const newNotes = rollNotes.map((note) => {
-        if (note.id === id) {
-          return {
-            ...note,
-            left: nextLeft,
-            event: note.event.updateTime(timelinePosition * getDurationOfSixteenth(bpm)),
-          };
-        }
-        return note;
-      });
-
-      setRollNotes(newNotes);
-    },
-    [rollNotes, bpm]
-  );
-
-  const handleDragNoteTop = React.useCallback(
-    (id: string, nextTop: number) => {
       const pitchPosition = Math.floor(nextTop / unitHeight);
       const pitch = keys[pitchPosition].pitch;
 
@@ -122,8 +100,12 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
         if (note.id === id) {
           return {
             ...note,
+            left: nextLeft,
             top: nextTop,
-            event: note.event.updateInstrument(audio[pitch]),
+            event: note.event.updateInstrumentOrTime(
+              audio[pitch],
+              timelinePosition * getDurationOfSixteenth(bpm)
+            ),
           };
         }
         return note;
@@ -131,7 +113,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
 
       setRollNotes(newNotes);
     },
-    [rollNotes, audio, keys, unitHeight]
+    [rollNotes, audio, keys, unitHeight, scrollLeft, bpm]
   );
 
   const handleDeleteNote = React.useCallback(
@@ -178,15 +160,14 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
     return () => {
       rollNotes.forEach((note) => note.event.delete());
     };
-  }, [rollNotes]);
+  }, []);
 
   return {
     rollNotes,
     regionRef,
     handleMouseDownRegion,
     handleResizeNote,
-    handleDragNoteLeft,
-    handleDragNoteTop,
+    handleDragNote,
     handleDeleteNote,
     handleSetIsResizing,
     handleSetIsDragging,

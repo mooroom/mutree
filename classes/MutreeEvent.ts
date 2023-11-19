@@ -21,8 +21,8 @@ export default class MutreeEvent {
     this._duration = duration;
 
     this._instrument.playOnce();
-    this._event.callback = () => {
-      this._instrument?.play(this._duration);
+    this._event.callback = (time) => {
+      this._instrument?.play(this._duration, time);
     };
     this._event.start(this._time);
   }
@@ -33,36 +33,30 @@ export default class MutreeEvent {
     this._time = time;
     this._duration = duration;
 
-    this._event.callback = () => {
-      this._instrument?.play(this._duration);
+    this._event.callback = (time) => {
+      this._instrument?.play(this._duration, time);
     };
     this._event.start(this._time);
 
     return this;
   }
 
-  // Update the instrument of the event
+  // Update the event with new instrument
   updateInstrument(instrument: Nullable<MutreeInstrument>) {
     this.update(instrument, this._time, this._duration);
 
     return this;
   }
 
-  // Update the time of the event
-  updateTime(time: Time) {
-    if (this._instrument === null) {
-      throw new Error('invalid instrument');
-    }
-    this.update(this._instrument, time, this._duration);
+  // Update the instrument or the time of the event
+  updateInstrumentOrTime(instrument: Nullable<MutreeInstrument>, time: Time) {
+    this.update(instrument, time, this._duration);
 
     return this;
   }
 
   // Update the duration of the event
   updateDuration(duration: Time) {
-    if (this._instrument === null) {
-      throw new Error('invalid instrument');
-    }
     this.update(this._instrument, this._time, duration);
 
     return this;
@@ -79,9 +73,6 @@ export default class MutreeEvent {
   }
 
   get instrument() {
-    if (this._instrument === null) {
-      throw new Error('invalid instrument');
-    }
     return this._instrument;
   }
 

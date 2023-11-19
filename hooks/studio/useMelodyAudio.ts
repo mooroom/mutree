@@ -14,9 +14,9 @@ const getMelodyAudioOptions = (
   urls: {
     [note]: `${audioName}/${note}.mp3`,
   },
-  onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
+  // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
   onerror: () => {
-    console.log(`error loading: ${audioName}/${note}.mp3`);
+    // console.log(`error loading: ${audioName}/${note}.mp3`);
     errorCallback();
   },
 });

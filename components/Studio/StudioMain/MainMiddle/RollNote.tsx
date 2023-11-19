@@ -13,8 +13,7 @@ interface Props {
   onSetIsResizing: (resizing: boolean) => void;
   onSetIsDragging: (dragging: boolean) => void;
   onResizeNote: (id: string, nextSteps: number) => void;
-  onDragNoteLeft: (id: string, nextLeft: number) => void;
-  onDragNoteTop: (id: string, nextTop: number) => void;
+  onDragNote: (id: string, nextLeft: number, nextTop: number) => void;
   onDeleteNote: (id: string) => void;
 }
 
@@ -28,8 +27,7 @@ export default function RollNote({
   onResizeNote,
   onSetIsDragging,
   onSetIsResizing,
-  onDragNoteTop,
-  onDragNoteLeft,
+  onDragNote,
   onDeleteNote,
 }: Props) {
   const theme = useMantineTheme();
@@ -86,8 +84,7 @@ export default function RollNote({
         if (nextLeft < 0 || nextTop < 0) return;
         if (nextLeft === left && nextTop === top) return;
 
-        if (nextLeft !== left) onDragNoteLeft(id, nextLeft);
-        if (nextTop !== top) onDragNoteTop(id, nextTop);
+        onDragNote(id, nextLeft, nextTop);
       };
 
       const handleMouseUp = () => {
@@ -100,7 +97,7 @@ export default function RollNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onDragNoteLeft, onDragNoteTop, id, left, top, unitHeight, onSetIsDragging]
+    [onDragNote, id, left, top, unitHeight, onSetIsDragging]
   );
 
   const handleDoubleClick = React.useCallback(() => {

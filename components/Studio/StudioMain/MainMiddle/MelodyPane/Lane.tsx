@@ -26,8 +26,7 @@ export default function Lane() {
     regionRef,
     rollNotes,
     handleDeleteNote,
-    handleDragNoteLeft,
-    handleDragNoteTop,
+    handleDragNote,
     handleMouseDownRegion,
     handleResizeNote,
     handleSetIsDragging,
@@ -69,8 +68,7 @@ export default function Lane() {
                   onSetIsResizing={handleSetIsResizing}
                   onSetIsDragging={handleSetIsDragging}
                   onResizeNote={handleResizeNote}
-                  onDragNoteLeft={handleDragNoteLeft}
-                  onDragNoteTop={handleDragNoteTop}
+                  onDragNote={handleDragNote}
                   onDeleteNote={handleDeleteNote}
                 />
               ))}

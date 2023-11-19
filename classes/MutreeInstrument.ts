@@ -13,9 +13,9 @@ export default class MutreeInstrument extends Sampler {
     this.triggerAttackRelease(this._note, '16n');
   }
 
-  play(duration: Time) {
+  play(duration: Time, time: Time) {
     // bpm 바뀌면 이거도 바꿔야 함
-    this.triggerAttackRelease(this._note, duration);
+    this.triggerAttackRelease(this._note, duration, time);
   }
 
   get note() {
