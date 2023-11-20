@@ -8,18 +8,25 @@ const getMelodyAudioOptions = (
   note: string,
   audioName: string,
   errorCallback: () => void
-): Partial<SamplerOptions> => ({
-  release: 1,
-  baseUrl: melodyAudioData.baseUrl,
-  urls: {
-    [note]: `${audioName}/${note}.mp3`,
-  },
-  // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
-  onerror: () => {
-    // console.log(`error loading: ${audioName}/${note}.mp3`);
-    errorCallback();
-  },
-});
+): Partial<SamplerOptions> => {
+  const isSharp = note.includes('#');
+  const isFlat = note.includes('b');
+
+  const noteName = isSharp ? note[0] + 's' + note[2] : isFlat ? note[0] + 'b' + note[2] : note;
+
+  return {
+    release: 1,
+    baseUrl: melodyAudioData.baseUrl,
+    urls: {
+      [note]: `${audioName}/${noteName}.mp3`,
+    },
+    // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
+    onerror: () => {
+      console.log(`error loading: ${audioName}/${note}.mp3`);
+      errorCallback();
+    },
+  };
+};
 
 export default function useMelodyAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
@@ -51,7 +58,7 @@ export default function useMelodyAudio() {
 
       for (let i = startMidiNote; i <= endMidiNote; i++) {
         const note = Frequency(i, 'midi').toNote();
-
+        console.log('note: ', note);
         audio[i] = new MutreeInstrument(
           note,
           getMelodyAudioOptions(note, audioName.value, () => {
@@ -62,7 +69,7 @@ export default function useMelodyAudio() {
 
       audioMap[audioName.value] = audio;
     }
-
+    console.log(audioMap);
     audioMapRef.current = audioMap;
 
     const checkAudioLoaded = setInterval(() => {
