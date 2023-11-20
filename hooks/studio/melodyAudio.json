@@ -1,4 +1,9 @@
 {
   "baseUrl": "/studio/audio/melody/",
-  "audioList": ["piano"]
+  "audioList": [
+    {
+      "value": "piano",
+      "label": "피아노"
+    }
+  ]
 }

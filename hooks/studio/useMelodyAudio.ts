@@ -1,5 +1,5 @@
 import React from 'react';
-import { MutreeAudio, MutreeAudioMap } from '@/types/studio';
+import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
 import melodyAudioData from './melodyAudio.json';
 import { SamplerOptions, Frequency } from 'tone';
 import MutreeInstrument from '@/classes/MutreeInstrument';
@@ -25,6 +25,18 @@ export default function useMelodyAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
   const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
 
+  const [audioNameList] = React.useState<MutreeAudioName[]>(melodyAudioData.audioList);
+  const [selectedAudioName, setSelectedAudioName] = React.useState<MutreeAudioName>(
+    melodyAudioData.audioList[0]
+  );
+
+  const handleAudioNameChange = React.useCallback(
+    (audioName: MutreeAudioName) => {
+      setSelectedAudioName(audioName);
+    },
+    [setSelectedAudioName]
+  );
+
   React.useEffect(() => {
     const audioList = melodyAudioData.audioList;
 
@@ -42,13 +54,13 @@ export default function useMelodyAudio() {
 
         audio[i] = new MutreeInstrument(
           note,
-          getMelodyAudioOptions(note, audioName, () => {
+          getMelodyAudioOptions(note, audioName.value, () => {
             audio[i] = null;
           })
         ).toDestination();
       }
 
-      audioMap[audioName] = audio;
+      audioMap[audioName.value] = audio;
     }
 
     audioMapRef.current = audioMap;
@@ -81,5 +93,11 @@ export default function useMelodyAudio() {
     };
   }, []);
 
-  return { audioMap: audioMapRef.current, isAudioLoaded };
+  return {
+    audioMap: audioMapRef.current,
+    isAudioLoaded,
+    audioNameList,
+    selectedAudioName,
+    handleAudioNameChange,
+  };
 }

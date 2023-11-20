@@ -6,7 +6,6 @@ import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
 import useRollNotes from '@/hooks/studio/useRollNotes';
-import MutreeInstrument from '@/classes/MutreeInstrument';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -20,7 +19,7 @@ export default function Lane() {
     highlightColor: theme.colors.teal[3],
   });
 
-  const { melodyAudioMap } = useMutreeAudioContext();
+  const { melodyAudioMap, selectedMelodyAudioName } = useMutreeAudioContext();
 
   const {
     regionRef,
@@ -34,9 +33,13 @@ export default function Lane() {
   } = useRollNotes({
     idPrefix: 'melody',
     unitHeight: MELODY_UNIT_HEIGHT,
-    audio: melodyAudioMap['piano'],
+    audio: melodyAudioMap[selectedMelodyAudioName.value],
     keys: melodyKeys,
   });
+
+  const handlePlay = (pitch: number) => {
+    melodyAudioMap[selectedMelodyAudioName.value][pitch]?.playOnce();
+  };
 
   return (
     <div className={classes.scrollable}>
@@ -44,7 +47,11 @@ export default function Lane() {
         <div className={classes.keysAndGrid}>
           <div className={classes.keys}>
             {melodyKeys.map((v) => (
-              <UnstyledButton className={classes.key} key={v.pitch}>
+              <UnstyledButton
+                className={classes.key}
+                key={v.pitch}
+                onClick={() => handlePlay(v.pitch)}
+              >
                 {v.noteName.ko}
               </UnstyledButton>
             ))}

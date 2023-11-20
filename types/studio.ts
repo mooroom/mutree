@@ -19,3 +19,8 @@ export interface MutreeKey {
 export type MutreeAudio = Record<number, MutreeInstrument | null>;
 
 export type MutreeAudioMap = Record<string, MutreeAudio>;
+
+export type MutreeAudioName = {
+  label: string;
+  value: string;
+};
