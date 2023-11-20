@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil';
 import * as IStudio from '@/types/studio';
 import * as Tone from 'tone';
-import { getMelodyKeys } from '@/utils/studio';
+import { getMelodyKeys, getRhythmKeys } from '@/utils/studio';
 
 export const isToneInitializedAtom = atom<boolean>({
   key: 'isToneInitializedAtom',
@@ -100,4 +100,9 @@ export const melodyKeysAtom = selector<IStudio.MutreeKey[]>({
 
     return getMelodyKeys(rootNote, scaleName);
   },
+});
+
+export const rhythmKeysAtom = atom<IStudio.MutreeKey[]>({
+  key: 'rhythmKeysAtom',
+  default: getRhythmKeys(),
 });

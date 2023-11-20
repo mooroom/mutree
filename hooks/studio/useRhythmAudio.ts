@@ -1,24 +1,20 @@
 import React from 'react';
 import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
-import melodyAudioData from './melodyAudio.json';
+import rhythmAudioData from './rhythmAudio.json';
 import { SamplerOptions, Frequency } from 'tone';
 import MutreeInstrument from '@/classes/MutreeInstrument';
+import type { Note } from 'tone/build/esm/core/type/Units';
 
-const getMelodyAudioOptions = (
+const getRhythmAudioOptions = (
   note: string,
   audioName: string,
   errorCallback: () => void
 ): Partial<SamplerOptions> => {
-  const isSharp = note.includes('#');
-  const isFlat = note.includes('b');
-
-  const noteName = isSharp ? note[0] + 's' + note[2] : isFlat ? note[0] + 'b' + note[2] : note;
-
   return {
     release: 1,
-    baseUrl: melodyAudioData.baseUrl,
+    baseUrl: rhythmAudioData.baseUrl,
     urls: {
-      [note]: `${audioName}/${noteName}.mp3`,
+      [note]: `${audioName}/${note}.mp3`,
     },
     // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
     onerror: () => {
@@ -28,13 +24,13 @@ const getMelodyAudioOptions = (
   };
 };
 
-export default function useMelodyAudio() {
+export default function useRhythmAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
   const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
 
-  const [audioNameList] = React.useState<MutreeAudioName[]>(melodyAudioData.audioList);
+  const [audioNameList] = React.useState<MutreeAudioName[]>(rhythmAudioData.audioList);
   const [selectedAudioName, setSelectedAudioName] = React.useState<MutreeAudioName>(
-    melodyAudioData.audioList[0]
+    rhythmAudioData.audioList[0]
   );
 
   const handleAudioNameChange = React.useCallback(
@@ -45,23 +41,21 @@ export default function useMelodyAudio() {
   );
 
   React.useEffect(() => {
-    const audioList = melodyAudioData.audioList;
+    const audioList = rhythmAudioData.audioList;
 
     const audioMap: MutreeAudioMap = {};
 
     for (const audioName of audioList) {
       const audio: MutreeAudio = {};
 
-      //C2 ~ C5
-      const startMidiNote = 36;
-      const endMidiNote = 72;
+      const notes = ['C0', 'D0', 'E0', 'F0', 'G0', 'A0', 'B0'].reverse() as Note[];
 
-      for (let i = startMidiNote; i <= endMidiNote; i++) {
-        const note = Frequency(i, 'midi').toNote();
-        audio[i] = new MutreeInstrument(
+      for (const note of notes) {
+        const midiNote = Frequency(note).toMidi();
+        audio[midiNote] = new MutreeInstrument(
           note,
-          getMelodyAudioOptions(note, audioName.value, () => {
-            audio[i] = null;
+          getRhythmAudioOptions(note, audioName.value, () => {
+            audio[midiNote] = null;
           })
         ).toDestination();
       }

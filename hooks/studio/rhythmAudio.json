@@ -1,5 +1,5 @@
 {
-  "baseUrl": "/studio/audio/rhythm",
+  "baseUrl": "/studio/audio/rhythm/",
   "audioList": [
     {
       "value": "basic",

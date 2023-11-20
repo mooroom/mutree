@@ -54,3 +54,19 @@ export function getMelodyKeys(root: number, scaleName: ScaleName) {
     };
   });
 }
+
+export function getRhythmKeys() {
+  const notes = ['C0', 'D0', 'E0', 'F0', 'G0', 'A0', 'B0'].reverse();
+
+  return notes.map((value: string | undefined) => {
+    const pitch = Tone.Frequency(value).toMidi();
+
+    return {
+      pitch,
+      noteName: {
+        ko: `${KO_NOTE_NAME[value![0]]}${value![1]}${value![2] ?? ''}`,
+        en: value!,
+      },
+    };
+  });
+}
