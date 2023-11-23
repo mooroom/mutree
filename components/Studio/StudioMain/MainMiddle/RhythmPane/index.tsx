@@ -1,6 +1,6 @@
 import { ThemeIcon, Select, Slider } from '@mantine/core';
 import { IconHeartbeat } from '@tabler/icons-react';
-import classes from './RhythmPane.module.css';
+import classes from './index.module.css';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 import Lane from './Lane';
 

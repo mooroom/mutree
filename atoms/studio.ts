@@ -106,3 +106,8 @@ export const rhythmKeysAtom = atom<IStudio.MutreeKey[]>({
   key: 'rhythmKeysAtom',
   default: getRhythmKeys(),
 });
+
+export const generateMelodyTriggeredAtom = atom<boolean>({
+  key: 'generateMelodyTriggeredAtom',
+  default: false,
+});

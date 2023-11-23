@@ -1,10 +1,16 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { scrollLeftAtom, resolutionAtom, bpmAtom } from '@/atoms/studio';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import {
+  scrollLeftAtom,
+  resolutionAtom,
+  bpmAtom,
+  generateMelodyTriggeredAtom,
+} from '@/atoms/studio';
 import MutreeEvent from '@/classes/MutreeEvent';
 import { MutreeAudio, MutreeKey, RollNote } from '@/types/studio';
 import { NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
-import { getDurationOfSixteenth } from '@/utils/studio';
+import { convertToINoteSequence, getDurationOfSixteenth } from '@/utils/studio';
+import * as mm from '@magenta/music';
 
 interface Props {
   idPrefix: string;
@@ -14,11 +20,15 @@ interface Props {
 }
 
 export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
-  const scrollLeft = useRecoilValue(scrollLeftAtom);
+  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const resolution = useRecoilValue(resolutionAtom);
   const bpm = useRecoilValue(bpmAtom);
+  const [generateNotesTriggered, setGenerateNotesTriggered] = useRecoilState(
+    generateMelodyTriggeredAtom
+  );
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
+  const [isRegionLoading, setIsRegionLoading] = React.useState(false);
 
   const regionRef = React.useRef<HTMLDivElement>(null);
   const noteIdRef = React.useRef(0);
@@ -156,6 +166,64 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   }, [audio, keys, unitHeight]);
 
   React.useEffect(() => {
+    if (generateNotesTriggered) {
+      setIsRegionLoading(true);
+      setScrollLeft(0);
+
+      // get the total quantized steps: highest endStep
+      const totalQuantizedSteps = rollNotes.reduce((acc, note) => {
+        if (note.endStep! > acc) {
+          return note.endStep!;
+        }
+        return acc;
+      }, 0);
+
+      const noteSequence = convertToINoteSequence(rollNotes, totalQuantizedSteps);
+      const model = new mm.Coconet(
+        'https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach'
+      );
+      model
+        .initialize()
+        .then(() => model.infill(noteSequence, { temperature: 0.1 }))
+        .then((sample) => {
+          const mergedSample = mm.sequences.mergeConsecutiveNotes(sample);
+
+          const newNotes = mergedSample.notes
+            ?.map((note, index) => {
+              // 이 방식은 한번 더 고민할것
+              if (keys.findIndex((key) => key.pitch === note.pitch) === -1) return;
+
+              return {
+                id: `${idPrefix}-note-${index}`,
+                left: STEP_WIDTH * note.quantizedStartStep!,
+                top: unitHeight * keys.findIndex((key) => key.pitch === note.pitch),
+                steps: note.quantizedEndStep! - note.quantizedStartStep!,
+                event: new MutreeEvent(
+                  audio[note.pitch!],
+                  note.quantizedStartStep! * getDurationOfSixteenth(bpm),
+                  (note.quantizedEndStep! - note.quantizedStartStep!) * getDurationOfSixteenth(bpm),
+                  false
+                ),
+                pitch: note.pitch,
+                startStep: note.quantizedStartStep,
+                endStep: note.quantizedEndStep,
+              };
+            })
+            .filter((note) => note !== undefined) as RollNote[];
+          setRollNotes(newNotes);
+          setIsRegionLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsRegionLoading(false);
+        })
+        .finally(() => {
+          setGenerateNotesTriggered(false);
+        });
+    }
+  }, [generateNotesTriggered, rollNotes, audio, keys, unitHeight, scrollLeft, bpm]);
+
+  React.useEffect(() => {
     // on unmount
     return () => {
       rollNotes.forEach((note) => note.event.delete());
@@ -165,6 +233,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   return {
     rollNotes,
     regionRef,
+    isRegionLoading,
     handleMouseDownRegion,
     handleResizeNote,
     handleDragNote,

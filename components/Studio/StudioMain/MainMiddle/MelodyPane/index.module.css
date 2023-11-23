@@ -1,15 +1,30 @@
-.rhythmPane {
-  height: calc(40% - 2px);
+.melodyPane {
+  height: calc(60% - 2px);
   display: flex;
-  background-color: royalblue;
+  background-color: rosybrown;
 }
 
 .paneLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 250px;
   height: 100%;
   background-color: white;
   padding: 20px;
   border-right: 1px solid var(--mantine-color-gray-2);
+}
+
+.paneLeftTop {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.paneLeftBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .paneRight {
@@ -28,4 +43,11 @@
   flex-direction: column;
   gap: 10px;
   width: 144px;
+}
+
+.noteControls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
 }

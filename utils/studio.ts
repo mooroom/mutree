@@ -1,7 +1,8 @@
 import * as Tone from 'tone';
 import { ROOT_NOTES, TOTAL_STEPS, TOTAL_WIDTH } from '@/constants/studio';
-import { ScaleName } from '@/types/studio';
+import { ScaleName, RollNote } from '@/types/studio';
 import { Scale } from 'tonal';
+import * as mm from '@magenta/music';
 
 // time utils
 export function formatTimer(time: number) {
@@ -70,3 +71,24 @@ export function getRhythmKeys() {
     };
   });
 }
+
+export const convertToINoteSequence = (rollNotes: RollNote[], totalQuantizedSteps: number) => {
+  const notes = rollNotes.map((note) => {
+    return {
+      pitch: note.pitch,
+      quantizedStartStep: note.startStep,
+      quantizedEndStep: note.endStep,
+      program: 0,
+    };
+  });
+
+  const noteSequence: mm.INoteSequence = {
+    notes,
+    quantizationInfo: {
+      stepsPerQuarter: 4,
+    },
+    totalQuantizedSteps,
+  };
+
+  return noteSequence;
+};

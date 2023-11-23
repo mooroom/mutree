@@ -10,7 +10,12 @@ export default class MutreeEvent {
   private _time: Time;
   private _duration: Time;
 
-  constructor(instrument: Nullable<MutreeInstrument>, time: Time, duration: Time) {
+  constructor(
+    instrument: Nullable<MutreeInstrument>,
+    time: Time,
+    duration: Time,
+    playOnCreate = true
+  ) {
     if (instrument === null) {
       throw new Error('invalid instrument');
     }
@@ -20,7 +25,10 @@ export default class MutreeEvent {
     this._time = time;
     this._duration = duration;
 
-    this._instrument.playOnce();
+    if (playOnCreate) {
+      this._instrument.playOnce();
+    }
+
     this._event.callback = (time) => {
       this._instrument?.play(this._duration, time);
     };

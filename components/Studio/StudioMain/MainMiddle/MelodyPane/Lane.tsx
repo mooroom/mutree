@@ -1,11 +1,11 @@
 import { melodyKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
-import { useRecoilValue } from 'recoil';
-import { UnstyledButton, useMantineTheme } from '@mantine/core';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { LoadingOverlay, UnstyledButton, useMantineTheme } from '@mantine/core';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
-import useRollNotes from '@/hooks/studio/useRollNotes';
+import useMelodyRollNotes from '@/hooks/studio/useMelodyRollNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -24,13 +24,14 @@ export default function Lane() {
   const {
     regionRef,
     rollNotes,
+    isRegionLoading,
     handleDeleteNote,
     handleDragNote,
     handleMouseDownRegion,
     handleResizeNote,
     handleSetIsDragging,
     handleSetIsResizing,
-  } = useRollNotes({
+  } = useMelodyRollNotes({
     idPrefix: 'melody',
     unitHeight: MELODY_UNIT_HEIGHT,
     audio: melodyAudioMap[selectedMelodyAudioName.value],
@@ -63,6 +64,7 @@ export default function Lane() {
               ref={regionRef}
               onMouseDown={handleMouseDownRegion}
             >
+              <LoadingOverlay visible={isRegionLoading} />
               {rollNotes.map((v) => (
                 <RollNote
                   key={v.id}

@@ -1,3 +1,4 @@
+import MutreeEvent from '@/classes/MutreeEvent';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 import { DENOMINATORS, NUMERATORS, RESOLUTIONS, SCALE_NAMES } from '@/constants/studio';
 
@@ -24,3 +25,15 @@ export type MutreeAudioName = {
   label: string;
   value: string;
 };
+
+export interface RollNote {
+  id: string;
+  left: number;
+  top: number;
+  steps: number;
+  event: MutreeEvent;
+  // for coconet
+  pitch: number;
+  startStep: number;
+  endStep: number;
+}

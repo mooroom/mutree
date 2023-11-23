@@ -18,6 +18,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@magenta/music": "^1.23.1",
     "@mantine/core": "7.1.7",
     "@mantine/hooks": "7.1.7",
     "@next/bundle-analyzer": "^13.5.3",
