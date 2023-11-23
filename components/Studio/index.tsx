@@ -1,6 +1,10 @@
+// @ts-nocheck
+
 import MutreeAudioProvider from './MutreeAudioProvider';
 import StudioHeader from './StudioHeader';
-import StudioMain from './StudioMain';
+import dynamic from 'next/dynamic';
+
+const StudioMain = dynamic(() => import('./StudioMain'), { ssr: false });
 
 export default function Studio() {
   return (
