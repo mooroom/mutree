@@ -178,7 +178,6 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
       }, 0);
 
       const noteSequence = convertToINoteSequence(rollNotes, totalQuantizedSteps);
-      console.log('original noteSequence', noteSequence);
       const model = new mm.Coconet(
         'https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach'
       );
@@ -187,7 +186,6 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
         .then(() => model.infill(noteSequence, { temperature: 0.99 }))
         .then((sample) => {
           const mergedSample = mm.sequences.mergeConsecutiveNotes(sample);
-          console.log('merged sample', mergedSample);
 
           const newNotes = mergedSample.notes
             ?.map((note) => {
@@ -226,6 +224,49 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
         });
     }
   }, [generateNotesTriggered, rollNotes, audio, keys, unitHeight, scrollLeft, bpm]);
+
+  React.useEffect(() => {
+    // stringify rollNotes in url
+    // exclude id, event
+    const rollNotesWithoutEvent = rollNotes.map((note) => {
+      const { id, event, ...rest } = note;
+      return rest;
+    });
+
+    const encoded = btoa(JSON.stringify(rollNotesWithoutEvent));
+    window.history.replaceState({}, '', `?notes=${encoded}`);
+  }, [rollNotes]);
+
+  React.useEffect(() => {
+    // load rollNotes from url
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get('notes');
+    console.log(encoded);
+
+    if (encoded) {
+      const decoded = JSON.parse(atob(encoded));
+      const newNotes = decoded.map((note: any) => {
+        const { left, top, steps, pitch, startStep, endStep } = note;
+        return {
+          id: getNoteId(),
+          left,
+          top,
+          steps,
+          event: new MutreeEvent(
+            audio[pitch],
+            startStep * getDurationOfSixteenth(bpm),
+            (endStep - startStep) * getDurationOfSixteenth(bpm),
+            false
+          ),
+          pitch,
+          startStep,
+          endStep,
+        };
+      });
+
+      setRollNotes(newNotes);
+    }
+  }, [audio, bpm]);
 
   // React.useEffect(() => {
   //   // on unmount
