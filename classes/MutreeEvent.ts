@@ -41,6 +41,8 @@ export default class MutreeEvent {
     this._time = time;
     this._duration = duration;
 
+    this._event.dispose();
+    this._event = new ToneEvent();
     this._event.callback = (time) => {
       this._instrument?.play(this._duration, time);
     };

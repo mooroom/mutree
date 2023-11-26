@@ -34,8 +34,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   const noteIdRef = React.useRef(0);
 
   const getNoteId = React.useCallback(() => {
-    noteIdRef.current += 1;
-    return `${idPrefix}-note-${noteIdRef.current}`;
+    return `${idPrefix}-note-${noteIdRef.current++}`;
   }, [idPrefix]);
 
   const handleMouseDownRegion = React.useCallback(
@@ -179,22 +178,24 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
       }, 0);
 
       const noteSequence = convertToINoteSequence(rollNotes, totalQuantizedSteps);
+      console.log('original noteSequence', noteSequence);
       const model = new mm.Coconet(
         'https://storage.googleapis.com/magentadata/js/checkpoints/coconet/bach'
       );
       model
         .initialize()
-        .then(() => model.infill(noteSequence, { temperature: 0.1 }))
+        .then(() => model.infill(noteSequence, { temperature: 0.99 }))
         .then((sample) => {
           const mergedSample = mm.sequences.mergeConsecutiveNotes(sample);
+          console.log('merged sample', mergedSample);
 
           const newNotes = mergedSample.notes
-            ?.map((note, index) => {
+            ?.map((note) => {
               // 이 방식은 한번 더 고민할것
               if (keys.findIndex((key) => key.pitch === note.pitch) === -1) return;
 
               return {
-                id: `${idPrefix}-note-${index}`,
+                id: getNoteId(),
                 left: STEP_WIDTH * note.quantizedStartStep!,
                 top: unitHeight * keys.findIndex((key) => key.pitch === note.pitch),
                 steps: note.quantizedEndStep! - note.quantizedStartStep!,
@@ -210,7 +211,10 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
               };
             })
             .filter((note) => note !== undefined) as RollNote[];
-          setRollNotes(newNotes);
+
+          // merge with original notes
+          setRollNotes([...rollNotes, ...newNotes]);
+
           setIsRegionLoading(false);
         })
         .catch((error) => {
@@ -223,12 +227,12 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
     }
   }, [generateNotesTriggered, rollNotes, audio, keys, unitHeight, scrollLeft, bpm]);
 
-  React.useEffect(() => {
-    // on unmount
-    return () => {
-      rollNotes.forEach((note) => note.event.delete());
-    };
-  }, []);
+  // React.useEffect(() => {
+  //   // on unmount
+  //   return () => {
+  //     rollNotes.forEach((note) => note.event.delete());
+  //   };
+  // }, []);
 
   return {
     rollNotes,
