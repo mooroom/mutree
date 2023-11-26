@@ -29,6 +29,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
   const [isRegionLoading, setIsRegionLoading] = React.useState(false);
+  const [isIntializedByUrl, setIsIntializedByUrl] = React.useState(false);
 
   const regionRef = React.useRef<HTMLDivElement>(null);
   const noteIdRef = React.useRef(0);
@@ -228,44 +229,65 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   React.useEffect(() => {
     // stringify rollNotes in url
     // exclude id, event
-    const rollNotesWithoutEvent = rollNotes.map((note) => {
-      const { id, event, ...rest } = note;
-      return rest;
-    });
+    // cosider isIntializedByUrl
+    if (!isIntializedByUrl) return;
 
-    const encoded = btoa(JSON.stringify(rollNotesWithoutEvent));
-    window.history.replaceState({}, '', `?notes=${encoded}`);
+    const encoded = btoa(
+      JSON.stringify(
+        rollNotes.map((note) => {
+          const { left, top, steps, pitch, startStep, endStep } = note;
+          return {
+            left,
+            top,
+            steps,
+            pitch,
+            startStep,
+            endStep,
+          };
+        })
+      )
+    );
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('notes', encoded);
+    window.history.replaceState({}, '', url.toString());
   }, [rollNotes]);
 
   React.useEffect(() => {
     // load rollNotes from url
-    const params = new URLSearchParams(window.location.search);
-    const encoded = params.get('notes');
-    console.log(encoded);
+    // consider isIntializedByUrl
+    if (isIntializedByUrl) return;
 
-    if (encoded) {
-      const decoded = JSON.parse(atob(encoded));
-      const newNotes = decoded.map((note: any) => {
-        const { left, top, steps, pitch, startStep, endStep } = note;
-        return {
-          id: getNoteId(),
-          left,
-          top,
-          steps,
-          event: new MutreeEvent(
-            audio[pitch],
-            startStep * getDurationOfSixteenth(bpm),
-            (endStep - startStep) * getDurationOfSixteenth(bpm),
-            false
-          ),
-          pitch,
-          startStep,
-          endStep,
-        };
-      });
-
-      setRollNotes(newNotes);
+    const url = new URL(window.location.href);
+    const encoded = url.searchParams.get('notes');
+    if (!encoded) {
+      setIsIntializedByUrl(true);
+      return;
     }
+
+    const decoded = JSON.parse(atob(encoded));
+
+    const newNotes = decoded.map((note: any) => {
+      const { left, top, steps, pitch, startStep, endStep } = note;
+      return {
+        id: getNoteId(),
+        left,
+        top,
+        steps,
+        event: new MutreeEvent(
+          audio[pitch],
+          startStep * getDurationOfSixteenth(bpm),
+          steps * getDurationOfSixteenth(bpm),
+          false
+        ),
+        pitch,
+        startStep,
+        endStep,
+      };
+    });
+
+    setRollNotes(newNotes);
+    setIsIntializedByUrl(true);
   }, [audio, bpm]);
 
   // React.useEffect(() => {
