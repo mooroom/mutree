@@ -5,18 +5,16 @@ export function Welcome() {
   return (
     <>
       <Title className={classes.title} ta="center" mt={100}>
-        Welcome to{' '}
-        <Text inherit variant="gradient" component="span" gradient={{ from: 'pink', to: 'yellow' }}>
-          Mantine
+        <Text inherit variant="gradient" component="span" gradient={{ from: 'teal', to: 'cyan' }}>
+          뮤트리
         </Text>
+        에 오신 것을 환영합니다!
       </Title>
       <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-        This starter Next.js project includes a minimal setup for server side rendering, if you want
-        to learn more on Mantine + Next.js integration follow{' '}
-        <Anchor href="https://mantine.dev/guides/next/" size="lg">
-          this guide
+        <Anchor href="/studio" size="lg">
+          여기
         </Anchor>
-        . To get started edit page.tsx file.
+        에서 뮤트리를 시작해보세요!
       </Text>
     </>
   );
