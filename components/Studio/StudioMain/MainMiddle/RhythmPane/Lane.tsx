@@ -5,7 +5,7 @@ import { UnstyledButton, useMantineTheme } from '@mantine/core';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { RHYTHM_UNIT_HEIGHT, RHYTHM_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
-import useRollNotes from '@/hooks/studio/useRollNotes';
+import useRhythmRollNotes from '@/hooks/studio/useRhythmRollNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -28,7 +28,7 @@ export default function Lane() {
     handleResizeNote,
     handleSetIsDragging,
     handleSetIsResizing,
-  } = useRollNotes({
+  } = useRhythmRollNotes({
     idPrefix: 'rhythm',
     unitHeight: RHYTHM_UNIT_HEIGHT,
     audio: rhythmAudioMap[selectedRhythmAudioName.value],

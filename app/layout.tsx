@@ -1,11 +1,13 @@
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { resolver, themeOverride } from '../theme';
+import { Notifications } from '@mantine/notifications';
 
 export const metadata = {
-  title: 'Mantine Next.js template',
-  description: 'I am using Mantine with Next.js!',
+  title: 'mutree',
+  description: 'create music easily',
 };
 
 export default function RootLayout({ children }: { children: any }) {
@@ -21,6 +23,7 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider theme={themeOverride} cssVariablesResolver={resolver}>
+          <Notifications position="top-center" />
           {children}
         </MantineProvider>
       </body>

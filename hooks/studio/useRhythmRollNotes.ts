@@ -13,12 +13,13 @@ interface Props {
   keys: MutreeKey[];
 }
 
-export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
+export default function useRhythmRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
   const scrollLeft = useRecoilValue(scrollLeftAtom);
   const resolution = useRecoilValue(resolutionAtom);
   const bpm = useRecoilValue(bpmAtom);
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
+  const [isIntializedByUrl, setIsIntializedByUrl] = React.useState(false);
 
   const regionRef = React.useRef<HTMLDivElement>(null);
   const noteIdRef = React.useRef(0);
@@ -156,11 +157,57 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   }, [audio, keys, unitHeight]);
 
   React.useEffect(() => {
-    // on unmount
-    return () => {
-      rollNotes.forEach((note) => note.event.delete());
-    };
-  }, []);
+    if (!isIntializedByUrl) return;
+
+    const data = rollNotes.map((note) => {
+      const { left, top, steps, pitch, startStep, endStep } = note;
+      return {
+        left,
+        top,
+        steps,
+        pitch,
+        startStep,
+        endStep,
+      };
+    });
+
+    localStorage.setItem('rhythm-roll-notes', JSON.stringify(data));
+  }, [rollNotes, isIntializedByUrl]);
+
+  React.useEffect(() => {
+    if (isIntializedByUrl) return;
+
+    const url = new URL(window.location.href);
+    const encoded = url.searchParams.get('rhythm');
+    if (!encoded) {
+      setIsIntializedByUrl(true);
+      return;
+    }
+
+    const decoded = JSON.parse(atob(encoded));
+
+    const newNotes = decoded.map((note: any) => {
+      const { left, top, steps, pitch, startStep, endStep } = note;
+      return {
+        id: getNoteId(),
+        left,
+        top,
+        steps,
+        event: new MutreeEvent(
+          audio[pitch],
+          startStep * getDurationOfSixteenth(bpm),
+          steps * getDurationOfSixteenth(bpm),
+          false
+        ),
+        pitch,
+        startStep,
+        endStep,
+      };
+    });
+
+    setRollNotes(newNotes);
+    setIsIntializedByUrl(true);
+  }, [isIntializedByUrl]);
 
   return {
     rollNotes,

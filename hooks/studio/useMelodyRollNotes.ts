@@ -19,7 +19,7 @@ interface Props {
   keys: MutreeKey[];
 }
 
-export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
+export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const resolution = useRecoilValue(resolutionAtom);
   const bpm = useRecoilValue(bpmAtom);
@@ -227,39 +227,28 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
   }, [generateNotesTriggered, rollNotes, audio, keys, unitHeight, scrollLeft, bpm]);
 
   React.useEffect(() => {
-    // stringify rollNotes in url
-    // exclude id, event
-    // cosider isIntializedByUrl
     if (!isIntializedByUrl) return;
 
-    const encoded = btoa(
-      JSON.stringify(
-        rollNotes.map((note) => {
-          const { left, top, steps, pitch, startStep, endStep } = note;
-          return {
-            left,
-            top,
-            steps,
-            pitch,
-            startStep,
-            endStep,
-          };
-        })
-      )
-    );
+    const data = rollNotes.map((note) => {
+      const { left, top, steps, pitch, startStep, endStep } = note;
+      return {
+        left,
+        top,
+        steps,
+        pitch,
+        startStep,
+        endStep,
+      };
+    });
 
-    const url = new URL(window.location.href);
-    url.searchParams.set('notes', encoded);
-    window.history.replaceState({}, '', url.toString());
-  }, [rollNotes]);
+    localStorage.setItem('melody-roll-notes', JSON.stringify(data));
+  }, [rollNotes, isIntializedByUrl]);
 
   React.useEffect(() => {
-    // load rollNotes from url
-    // consider isIntializedByUrl
     if (isIntializedByUrl) return;
 
     const url = new URL(window.location.href);
-    const encoded = url.searchParams.get('notes');
+    const encoded = url.searchParams.get('melody');
     if (!encoded) {
       setIsIntializedByUrl(true);
       return;
@@ -288,14 +277,7 @@ export default function useRollNotes({ idPrefix, unitHeight, audio, keys }: Prop
 
     setRollNotes(newNotes);
     setIsIntializedByUrl(true);
-  }, [audio, bpm]);
-
-  // React.useEffect(() => {
-  //   // on unmount
-  //   return () => {
-  //     rollNotes.forEach((note) => note.event.delete());
-  //   };
-  // }, []);
+  }, [isIntializedByUrl]);
 
   return {
     rollNotes,

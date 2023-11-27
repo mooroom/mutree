@@ -92,3 +92,17 @@ export const convertToINoteSequence = (rollNotes: RollNote[], totalQuantizedStep
 
   return noteSequence;
 };
+
+export const makeUrlFromLocalStorage = () => {
+  const melodyRollNotes = localStorage.getItem('melody-roll-notes');
+  const rhythmRollNotes = localStorage.getItem('rhythm-roll-notes');
+
+  // parse array data and encode
+  const encodedMelody = melodyRollNotes ? btoa(melodyRollNotes) : btoa('[]');
+  const encodedRhythm = rhythmRollNotes ? btoa(rhythmRollNotes) : btoa('[]');
+
+  // make url
+  const url = `${window.location.origin}/studio?melody=${encodedMelody}&rhythm=${encodedRhythm}`;
+
+  return url;
+};

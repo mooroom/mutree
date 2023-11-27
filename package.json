@@ -21,6 +21,7 @@
     "@magenta/music": "^1.23.1",
     "@mantine/core": "7.1.7",
     "@mantine/hooks": "7.1.7",
+    "@mantine/notifications": "^7.2.2",
     "@next/bundle-analyzer": "^13.5.3",
     "@tabler/icons-react": "^2.20.0",
     "next": "13.5.3",
