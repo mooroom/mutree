@@ -30,24 +30,3 @@
 .paneRight {
   flex: 1;
 }
-
-.instControls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.instControlRight {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 144px;
-}
-
-.noteControls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}

@@ -31,3 +31,13 @@ export const ROOT_NOTES: Record<(typeof SCALE_NAMES)[number], string[]> = {
   major: MAJOR_ROOT_NOTES,
   minor: MINOR_ROOT_NOTES,
 };
+
+export const KO_NOTE_NAME: { [key: string]: string } = {
+  C: '도',
+  D: '레',
+  E: '미',
+  F: '파',
+  G: '솔',
+  A: '라',
+  B: '시',
+};

@@ -1,22 +1,15 @@
-import { Button, Divider, Overlay, Select, Slider, ThemeIcon } from '@mantine/core';
+import { Button, Divider } from '@mantine/core';
 import classes from './index.module.css';
-import { IconPiano, IconRobot } from '@tabler/icons-react';
+import { IconRobot } from '@tabler/icons-react';
 import Lane from './Lane';
-import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 import { generateMelodyTriggeredAtom } from '@/atoms/studio';
 import { useRecoilState } from 'recoil';
+import Controls from './Controls';
 
 export default function MelodyPane() {
-  const { melodyAudioNameList, selectedMelodyAudioName, handleMelodyAudioNameChange } =
-    useMutreeAudioContext();
   const [generateMelodyTriggered, setGenerateMelodyTriggered] = useRecoilState(
     generateMelodyTriggeredAtom
   );
-
-  const handleChange = (value: string | null) => {
-    const audioName = melodyAudioNameList.find((v) => v.value === value);
-    if (audioName) handleMelodyAudioNameChange(audioName);
-  };
 
   const handleGenerateMelody = () => {
     setGenerateMelodyTriggered(true);
@@ -26,23 +19,7 @@ export default function MelodyPane() {
     <div className={classes.melodyPane}>
       <div className={classes.paneLeft}>
         <div className={classes.paneLeftTop}>
-          <div className={classes.instControls}>
-            <ThemeIcon variant="light" radius="xl" size={50} color="teal">
-              <IconPiano size={30} />
-            </ThemeIcon>
-            <div className={classes.instControlRight}>
-              <Select
-                placeholder="악기 선택"
-                size="xs"
-                color="teal"
-                data={melodyAudioNameList}
-                value={selectedMelodyAudioName.value}
-                onChange={handleChange}
-              />
-              <Slider size="xs" color="teal" />
-            </div>
-          </div>
-          <Divider />
+          <Controls />
         </div>
         <div className={classes.paneLeftBottom}>
           <Button
