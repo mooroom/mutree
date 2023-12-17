@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { UnstyledButton } from '@mantine/core';
+import { Tooltip, UnstyledButton } from '@mantine/core';
 import Image from 'next/image';
 import { rhythmKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
@@ -46,13 +46,13 @@ export default function Lane() {
         <div className={classes.keysAndGrid}>
           <div className={classes.keys}>
             {rhythmKeys.map((v) => (
-              <UnstyledButton
-                className={classes.key}
-                key={v.pitch}
-                onClick={() => handlePlay(v.pitch)}
-              >
-                {v.iconUrl && <Image src={v.iconUrl} alt={v.noteName.ko} width={30} height={30} />}
-              </UnstyledButton>
+              <Tooltip label={v.noteName.ko} key={v.pitch} position="right" withArrow>
+                <UnstyledButton className={classes.key} onClick={() => handlePlay(v.pitch)}>
+                  {v.iconUrl && (
+                    <Image src={v.iconUrl} alt={v.noteName.ko} width={30} height={30} />
+                  )}
+                </UnstyledButton>
+              </Tooltip>
             ))}
           </div>
           <div className={classes.grid}>
