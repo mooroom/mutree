@@ -1,7 +1,7 @@
+import React from 'react';
 import useMelodyAudio from '@/hooks/studio/useMelodyAudio';
 import useRhythmAudio from '@/hooks/studio/useRhythmAudio';
 import { MutreeAudioMap, MutreeAudioName } from '@/types/studio';
-import React from 'react';
 
 type ContextType = {
   melodyAudioMap: MutreeAudioMap;

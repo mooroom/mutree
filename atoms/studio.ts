@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
-import * as IStudio from '@/types/studio';
 import * as Tone from 'tone';
+import * as IStudio from '@/types/studio';
 import { getMelodyKeys, getRhythmKeys } from '@/utils/studio';
 
 export const isToneInitializedAtom = atom<boolean>({

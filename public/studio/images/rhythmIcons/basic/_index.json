@@ -1,0 +1,51 @@
+{
+  "C0": {
+    "path": "/studio/images/rhythmIcons/basic/kick.svg",
+    "name": {
+      "ko": "킥",
+      "en": "Kick"
+    }
+  },
+  "D0": {
+    "path": "/studio/images/rhythmIcons/basic/floorTom.svg",
+    "name": {
+      "ko": "플로어톰",
+      "en": "Floor Tom"
+    }
+  },
+  "E0": {
+    "path": "/studio/images/rhythmIcons/basic/snare.svg",
+    "name": {
+      "ko": "스네어",
+      "en": "Snare"
+    }
+  },
+  "F0": {
+    "path": "/studio/images/rhythmIcons/basic/midTom.svg",
+    "name": {
+      "ko": "미드톰",
+      "en": "Mid Tom"
+    }
+  },
+  "G0": {
+    "path": "/studio/images/rhythmIcons/basic/closedHat.svg",
+    "name": {
+      "ko": "클로즈드 햇",
+      "en": "Closed Hat"
+    }
+  },
+  "A0": {
+    "path": "/studio/images/rhythmIcons/basic/openHat.svg",
+    "name": {
+      "ko": "오픈 햇",
+      "en": "Open Hat"
+    }
+  },
+  "B0": {
+    "path": "/studio/images/rhythmIcons/basic/crash.svg",
+    "name": {
+      "ko": "크래시",
+      "en": "Crash"
+    }
+  }
+}

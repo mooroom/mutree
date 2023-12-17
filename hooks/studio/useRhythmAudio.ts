@@ -1,28 +1,27 @@
 import React from 'react';
+import { SamplerOptions, Frequency } from 'tone';
+import type { Note } from 'tone/build/esm/core/type/Units';
 import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
 import rhythmAudioData from './rhythmAudio.json';
-import { SamplerOptions, Frequency } from 'tone';
 import MutreeInstrument from '@/classes/MutreeInstrument';
-import type { Note } from 'tone/build/esm/core/type/Units';
+import 'regenerator-runtime/runtime'; // Add import statement for regenerator-runtime
 
 const getRhythmAudioOptions = (
   note: string,
   audioName: string,
   errorCallback: () => void
-): Partial<SamplerOptions> => {
-  return {
-    release: 1,
-    baseUrl: rhythmAudioData.baseUrl,
-    urls: {
-      [note]: `${audioName}/${note}.mp3`,
-    },
-    // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
-    onerror: () => {
-      console.log(`error loading: ${audioName}/${note}.mp3`);
-      errorCallback();
-    },
-  };
-};
+): Partial<SamplerOptions> => ({
+  release: 1,
+  baseUrl: rhythmAudioData.baseUrl,
+  urls: {
+    [note]: `${audioName}/${note}.mp3`,
+  },
+  // onload: () => console.log(`loaded: ${audioName}/${note}.mp3`),
+  onerror: () => {
+    console.log(`error loading: ${audioName}/${note}.mp3`);
+    errorCallback();
+  },
+});
 
 export default function useRhythmAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
@@ -41,16 +40,16 @@ export default function useRhythmAudio() {
   );
 
   React.useEffect(() => {
-    const audioList = rhythmAudioData.audioList;
+    const { audioList } = rhythmAudioData;
 
     const audioMap: MutreeAudioMap = {};
 
-    for (const audioName of audioList) {
+    audioList.forEach((audioName) => {
       const audio: MutreeAudio = {};
 
       const notes = ['C0', 'D0', 'E0', 'F0', 'G0', 'A0', 'B0'].reverse() as Note[];
 
-      for (const note of notes) {
+      notes.forEach((note) => {
         const midiNote = Frequency(note).toMidi();
         audio[midiNote] = new MutreeInstrument(
           note,
@@ -58,38 +57,38 @@ export default function useRhythmAudio() {
             audio[midiNote] = null;
           })
         ).toDestination();
-      }
+      });
 
       audioMap[audioName.value] = audio;
-    }
+    });
     audioMapRef.current = audioMap;
 
     const checkAudioLoaded = setInterval(() => {
-      const audioMap = audioMapRef.current;
-      if (!audioMap) return;
+      const am = audioMapRef.current;
+      if (!am) return;
 
-      let isAudioLoaded = true;
+      let isLoaded = true;
 
-      for (const audio of Object.values(audioMap)) {
-        for (const inst of Object.values(audio)) {
-          if (!inst) continue;
-          if (!inst.loaded) isAudioLoaded = false;
-        }
-      }
+      Object.values(am).forEach((audio) => {
+        Object.values(audio).forEach((inst) => {
+          if (inst && !inst.loaded) {
+            isLoaded = false;
+          }
+        });
+      });
 
-      if (isAudioLoaded) {
+      if (isLoaded) {
         clearInterval(checkAudioLoaded);
         setIsAudioLoaded(true);
       }
     }, 100);
 
-    return () => {
-      for (const audio of Object.values(audioMap)) {
-        for (const inst of Object.values(audio)) {
+    return () =>
+      Object.values(audioMap).forEach((audio) => {
+        Object.values(audio).forEach((inst) => {
           if (inst) inst.dispose();
-        }
-      }
-    };
+        });
+      });
   }, []);
 
   return {

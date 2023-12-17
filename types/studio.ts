@@ -15,6 +15,7 @@ export interface MutreeKey {
     ko: string;
     en: string;
   };
+  iconUrl?: string;
 }
 
 export type MutreeAudio = Record<number, MutreeInstrument | null>;

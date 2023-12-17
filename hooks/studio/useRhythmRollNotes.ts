@@ -44,7 +44,7 @@ export default function useRhythmRollNotes({ idPrefix, unitHeight, audio, keys }
       const snapLeft = timelinePosition * STEP_WIDTH;
       const snapTop = pitchPosition * unitHeight;
 
-      const pitch = keys[pitchPosition].pitch;
+      const { pitch } = keys[pitchPosition];
       const inst = audio[pitch];
 
       const steps = NOTE_WIDTH[resolution] / STEP_WIDTH;
@@ -92,7 +92,7 @@ export default function useRhythmRollNotes({ idPrefix, unitHeight, audio, keys }
       const timelinePosition = Math.floor(absoluteX / STEP_WIDTH);
 
       const pitchPosition = Math.floor(nextTop / unitHeight);
-      const pitch = keys[pitchPosition].pitch;
+      const { pitch } = keys[pitchPosition];
 
       const newNotes = rollNotes.map((note) => {
         if (note.id === id) {

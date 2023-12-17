@@ -1,8 +1,8 @@
 // @ts-nocheck
 
+import dynamic from 'next/dynamic';
 import MutreeAudioProvider from './MutreeAudioProvider';
 import StudioHeader from './StudioHeader';
-import dynamic from 'next/dynamic';
 
 const StudioMain = dynamic(() => import('./StudioMain'), { ssr: false });
 

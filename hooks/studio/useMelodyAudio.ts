@@ -1,7 +1,7 @@
 import React from 'react';
+import { SamplerOptions, Frequency } from 'tone';
 import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
 import melodyAudioData from './melodyAudio.json';
-import { SamplerOptions, Frequency } from 'tone';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 
 const getMelodyAudioOptions = (
@@ -12,7 +12,7 @@ const getMelodyAudioOptions = (
   const isSharp = note.includes('#');
   const isFlat = note.includes('b');
 
-  const noteName = isSharp ? note[0] + 's' + note[2] : isFlat ? note[0] + 'b' + note[2] : note;
+  const noteName = isSharp ? `${note[0]}s${note[2]}` : isFlat ? `${note[0]}b${note[2]}` : note;
 
   return {
     release: 1,
@@ -45,18 +45,19 @@ export default function useMelodyAudio() {
   );
 
   React.useEffect(() => {
-    const audioList = melodyAudioData.audioList;
+    const { audioList } = melodyAudioData;
 
     const audioMap: MutreeAudioMap = {};
 
-    for (const audioName of audioList) {
+    Array.from(audioList).forEach((audioName) => {
       const audio: MutreeAudio = {};
 
       //C2 ~ C5
       const startMidiNote = 36;
       const endMidiNote = 72;
 
-      for (let i = startMidiNote; i <= endMidiNote; i++) {
+      Array.from({ length: endMidiNote - startMidiNote + 1 }).map((_, index) => {
+        const i = startMidiNote + index;
         const note = Frequency(i, 'midi').toNote();
         audio[i] = new MutreeInstrument(
           note,
@@ -64,37 +65,39 @@ export default function useMelodyAudio() {
             audio[i] = null;
           })
         ).toDestination();
-      }
+        return null; // Add a return statement here
+      });
 
       audioMap[audioName.value] = audio;
-    }
+    });
     audioMapRef.current = audioMap;
 
     const checkAudioLoaded = setInterval(() => {
-      const audioMap = audioMapRef.current;
-      if (!audioMap) return;
+      const am = audioMapRef.current;
+      if (!am) return;
 
-      let isAudioLoaded = true;
+      let isLoaded = true;
 
-      for (const audio of Object.values(audioMap)) {
-        for (const inst of Object.values(audio)) {
-          if (!inst) continue;
-          if (!inst.loaded) isAudioLoaded = false;
-        }
-      }
+      Object.values(am).forEach((audio) => {
+        Object.values(audio).forEach((inst) => {
+          if (inst && !inst.loaded) {
+            isLoaded = false;
+          }
+        });
+      });
 
-      if (isAudioLoaded) {
+      if (isLoaded) {
         clearInterval(checkAudioLoaded);
         setIsAudioLoaded(true);
       }
     }, 100);
 
     return () => {
-      for (const audio of Object.values(audioMap)) {
-        for (const inst of Object.values(audio)) {
+      Object.values(audioMap).forEach((audio) => {
+        Object.values(audio).forEach((inst) => {
           if (inst) inst.dispose();
-        }
-      }
+        });
+      });
     };
   }, []);
 

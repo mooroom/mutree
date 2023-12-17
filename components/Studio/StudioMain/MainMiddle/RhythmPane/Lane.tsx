@@ -1,7 +1,8 @@
+import { useRecoilValue } from 'recoil';
+import { UnstyledButton } from '@mantine/core';
+import Image from 'next/image';
 import { rhythmKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
-import { useRecoilValue } from 'recoil';
-import { UnstyledButton, useMantineTheme } from '@mantine/core';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { RHYTHM_UNIT_HEIGHT, RHYTHM_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
@@ -50,7 +51,7 @@ export default function Lane() {
                 key={v.pitch}
                 onClick={() => handlePlay(v.pitch)}
               >
-                {v.noteName.ko}
+                {v.iconUrl && <Image src={v.iconUrl} alt={v.noteName.ko} width={30} height={30} />}
               </UnstyledButton>
             ))}
           </div>
@@ -60,6 +61,7 @@ export default function Lane() {
               className={classes.rollNotesRegion}
               ref={regionRef}
               onMouseDown={handleMouseDownRegion}
+              role="presentation"
             >
               {rollNotes.map((v) => (
                 <RollNote
