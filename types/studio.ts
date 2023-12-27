@@ -1,7 +1,7 @@
+import { Volume } from 'tone';
 import MutreeEvent from '@/classes/MutreeEvent';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 import { DENOMINATORS, NUMERATORS, RESOLUTIONS, SCALE_NAMES } from '@/constants/studio';
-import { Volume } from 'tone';
 
 export type PlayState = 'started' | 'stopped' | 'paused';
 export type Resolution = (typeof RESOLUTIONS)[number];
@@ -39,4 +39,6 @@ export interface RollNote {
   pitch: number;
   startStep: number;
   endStep: number;
+  isSelected?: boolean;
+  isAI?: boolean;
 }

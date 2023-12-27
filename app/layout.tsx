@@ -2,8 +2,8 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
-import { resolver, themeOverride } from '../theme';
 import { Notifications } from '@mantine/notifications';
+import { resolver, themeOverride } from '../theme';
 
 export const metadata = {
   title: 'mutree',

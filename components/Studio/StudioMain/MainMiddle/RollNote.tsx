@@ -1,7 +1,7 @@
+import { MantineColor, darken } from '@mantine/core';
+import React from 'react';
 import { STEP_WIDTH } from '@/constants/studio';
 import classes from './RollNote.module.css';
-import React from 'react';
-import { MantineColor, useMantineTheme } from '@mantine/core';
 
 interface Props {
   id: string;
@@ -30,19 +30,18 @@ export default function RollNote({
   onDragNote,
   onDeleteNote,
 }: Props) {
-  const theme = useMantineTheme();
   const colorStyles: React.CSSProperties = {
-    backgroundColor: theme.colors[color][5],
-    borderColor: theme.colors[color][7],
+    backgroundColor: color,
+    borderColor: darken(color, 0.3),
   };
 
-  const [selected, setSelected] = React.useState(false);
+  const [active, setActive] = React.useState(false);
 
   const handleMouseDownHead = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       onSetIsResizing(true);
-      setSelected(true);
+      setActive(true);
 
       const startX = e.clientX;
 
@@ -55,7 +54,7 @@ export default function RollNote({
 
       const handleMouseUp = () => {
         onSetIsResizing(false);
-        setSelected(false);
+        setActive(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -70,7 +69,7 @@ export default function RollNote({
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       onSetIsDragging(true);
-      setSelected(true);
+      setActive(true);
 
       const startX = e.clientX;
       const startY = e.clientY;
@@ -89,7 +88,7 @@ export default function RollNote({
 
       const handleMouseUp = () => {
         onSetIsDragging(false);
-        setSelected(false);
+        setActive(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -106,13 +105,21 @@ export default function RollNote({
 
   return (
     <div
+      role="button"
       className={classes.container}
-      style={{ left, top, width: steps * STEP_WIDTH, height: unitHeight, ...colorStyles }}
+      style={{
+        left,
+        top,
+        width: steps * STEP_WIDTH,
+        height: unitHeight,
+        ...colorStyles,
+      }}
       onMouseDown={handleMouseDownContainer}
       onDoubleClick={handleDoubleClick}
-      data-selected={selected}
+      data-active={active}
+      tabIndex={0} // Add tabIndex attribute to make the element focusable
     >
-      <div className={classes.head} onMouseDown={handleMouseDownHead} />
+      <div className={classes.head} role="none" onMouseDown={handleMouseDownHead} />
     </div>
   );
 }

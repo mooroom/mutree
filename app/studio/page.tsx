@@ -1,7 +1,7 @@
 'use client';
 
-import Studio from '@/components/Studio';
 import { RecoilRoot } from 'recoil';
+import Studio from '@/components/Studio';
 
 export default function StudioPage() {
   return (

@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { Tooltip, UnstyledButton } from '@mantine/core';
+import { Tooltip, UnstyledButton, useMantineTheme } from '@mantine/core';
 import Image from 'next/image';
 import { rhythmKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
@@ -12,6 +12,7 @@ import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 export default function Lane() {
   const scrollLeft = useRecoilValue(scrollLeftAtom);
   const rhythmKeys = useRecoilValue(rhythmKeysAtom);
+  const theme = useMantineTheme();
 
   const gridLinesRef = useGridLinesRef({
     numUnits: RHYTHM_UNIT_NUM,
@@ -71,7 +72,7 @@ export default function Lane() {
                   top={v.top}
                   steps={v.steps}
                   unitHeight={RHYTHM_UNIT_HEIGHT}
-                  color="cyan"
+                  color={theme.colors.cyan[5]}
                   onSetIsResizing={handleSetIsResizing}
                   onSetIsDragging={handleSetIsDragging}
                   onResizeNote={handleResizeNote}

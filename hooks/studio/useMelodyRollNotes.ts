@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import * as mm from '@magenta/music';
 import {
   scrollLeftAtom,
   resolutionAtom,
@@ -10,7 +11,6 @@ import MutreeEvent from '@/classes/MutreeEvent';
 import { MutreeAudio, MutreeKey, RollNote } from '@/types/studio';
 import { NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
 import { convertToINoteSequence, getDurationOfSixteenth } from '@/utils/studio';
-import * as mm from '@magenta/music';
 
 interface Props {
   idPrefix: string;
@@ -35,7 +35,8 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
   const noteIdRef = React.useRef(0);
 
   const getNoteId = React.useCallback(() => {
-    return `${idPrefix}-note-${noteIdRef.current++}`;
+    noteIdRef.current += 1;
+    return `${idPrefix}-note-${noteIdRef.current}`;
   }, [idPrefix]);
 
   const handleMouseDownRegion = React.useCallback(
@@ -53,7 +54,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
       const snapLeft = timelinePosition * STEP_WIDTH;
       const snapTop = pitchPosition * unitHeight;
 
-      const pitch = keys[pitchPosition].pitch;
+      const { pitch } = keys[pitchPosition];
       const inst = audio[pitch];
 
       const steps = NOTE_WIDTH[resolution] / STEP_WIDTH;
@@ -101,7 +102,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
       const timelinePosition = Math.floor(absoluteX / STEP_WIDTH);
 
       const pitchPosition = Math.floor(nextTop / unitHeight);
-      const pitch = keys[pitchPosition].pitch;
+      const { pitch } = keys[pitchPosition];
 
       const newNotes = rollNotes.map((note) => {
         if (note.id === id) {
@@ -193,6 +194,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
               // 이 방식은 한번 더 고민할것
               if (keys.findIndex((key) => key.pitch === note.pitch) === -1) return;
 
+              // eslint-disable-next-line consistent-return
               return {
                 id: getNoteId(),
                 left: STEP_WIDTH * note.quantizedStartStep!,
@@ -207,6 +209,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
                 pitch: note.pitch,
                 startStep: note.quantizedStartStep,
                 endStep: note.quantizedEndStep,
+                isAI: true,
               };
             })
             .filter((note) => note !== undefined) as RollNote[];

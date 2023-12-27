@@ -1,7 +1,7 @@
+import { useRecoilValue } from 'recoil';
+import { LoadingOverlay, UnstyledButton, useMantineTheme } from '@mantine/core';
 import { melodyKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { LoadingOverlay, UnstyledButton, useMantineTheme } from '@mantine/core';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
@@ -60,6 +60,7 @@ export default function Lane() {
           <div className={classes.grid}>
             <canvas className={classes.gridLines} ref={gridLinesRef} />
             <div
+              role="none"
               className={classes.rollNotesRegion}
               ref={regionRef}
               onMouseDown={handleMouseDownRegion}
@@ -73,7 +74,7 @@ export default function Lane() {
                   top={v.top}
                   steps={v.steps}
                   unitHeight={MELODY_UNIT_HEIGHT}
-                  color="teal"
+                  color={v.isAI ? theme.colors.orange[3] : theme.colors.teal[5]}
                   onSetIsResizing={handleSetIsResizing}
                   onSetIsDragging={handleSetIsDragging}
                   onResizeNote={handleResizeNote}

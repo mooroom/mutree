@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import classes from './StudioHeader.module.css';
 import { Button } from '@mantine/core';
 import { IconShare2 } from '@tabler/icons-react';
-import { makeUrlFromLocalStorage } from '@/utils/studio';
 import { notifications } from '@mantine/notifications';
+import classes from './StudioHeader.module.css';
+import { makeUrlFromLocalStorage } from '@/utils/studio';
 
 export default function StudioHeader() {
   const handleClickShare = () => {
@@ -11,7 +11,7 @@ export default function StudioHeader() {
     navigator.clipboard.writeText(url);
 
     notifications.show({
-      title: '클립보드에 복사되었습니다.',
+      title: '링크가 클립보드에 복사되었습니다.',
       message: '친구들에게 공유해보세요!',
       color: 'teal',
     });
