@@ -1,6 +1,6 @@
 import React from 'react';
-import { SamplerOptions, Frequency } from 'tone';
-import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
+import { SamplerOptions, Frequency, Volume } from 'tone';
+import { MutreeAudio, MutreeAudioMap, MutreeAudioName, MutreeVolumeMap } from '@/types/studio';
 import melodyAudioData from './melodyAudio.json';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 
@@ -30,6 +30,7 @@ const getMelodyAudioOptions = (
 
 export default function useMelodyAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
+  const volumeMapRef = React.useRef<MutreeVolumeMap>({});
   const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
 
   const [audioNameList] = React.useState<MutreeAudioName[]>(melodyAudioData.audioList);
@@ -48,9 +49,11 @@ export default function useMelodyAudio() {
     const { audioList } = melodyAudioData;
 
     const audioMap: MutreeAudioMap = {};
+    const volumeMap: MutreeVolumeMap = {};
 
     Array.from(audioList).forEach((audioName) => {
       const audio: MutreeAudio = {};
+      const volume = new Volume().toDestination();
 
       //C2 ~ C5
       const startMidiNote = 36;
@@ -64,13 +67,15 @@ export default function useMelodyAudio() {
           getMelodyAudioOptions(note, audioName.value, () => {
             audio[i] = null;
           })
-        ).toDestination();
+        ).connect(volume);
         return null; // Add a return statement here
       });
 
       audioMap[audioName.value] = audio;
+      volumeMap[audioName.value] = volume;
     });
     audioMapRef.current = audioMap;
+    volumeMapRef.current = volumeMap;
 
     const checkAudioLoaded = setInterval(() => {
       const am = audioMapRef.current;
@@ -103,6 +108,7 @@ export default function useMelodyAudio() {
 
   return {
     audioMap: audioMapRef.current,
+    volumeMap: volumeMapRef.current,
     isAudioLoaded,
     audioNameList,
     selectedAudioName,

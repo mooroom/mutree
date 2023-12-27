@@ -1,10 +1,11 @@
 import React from 'react';
 import useMelodyAudio from '@/hooks/studio/useMelodyAudio';
 import useRhythmAudio from '@/hooks/studio/useRhythmAudio';
-import { MutreeAudioMap, MutreeAudioName } from '@/types/studio';
+import { MutreeAudioMap, MutreeAudioName, MutreeVolumeMap } from '@/types/studio';
 
 type ContextType = {
   melodyAudioMap: MutreeAudioMap;
+  melodyVolumeMap: MutreeVolumeMap;
   melodyAudioNameList: MutreeAudioName[];
   selectedMelodyAudioName: MutreeAudioName;
   handleMelodyAudioNameChange: (value: MutreeAudioName) => void;
@@ -22,6 +23,7 @@ const MutreeAudioContext = React.createContext<ContextType>({} as ContextType);
 export default function MutreeAudioProvider({ children }: { children: React.ReactNode }) {
   const {
     audioMap: melodyAudioMap,
+    volumeMap: melodyVolumeMap,
     isAudioLoaded: isMelodyAudioLoaded,
     audioNameList: melodyAudioNameList,
     selectedAudioName: selectedMelodyAudioName,
@@ -39,6 +41,7 @@ export default function MutreeAudioProvider({ children }: { children: React.Reac
   return (
     <MutreeAudioContext.Provider
       value={{
+        melodyVolumeMap,
         melodyAudioMap,
         melodyAudioNameList,
         selectedMelodyAudioName,

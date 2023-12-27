@@ -1,6 +1,7 @@
 import MutreeEvent from '@/classes/MutreeEvent';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 import { DENOMINATORS, NUMERATORS, RESOLUTIONS, SCALE_NAMES } from '@/constants/studio';
+import { Volume } from 'tone';
 
 export type PlayState = 'started' | 'stopped' | 'paused';
 export type Resolution = (typeof RESOLUTIONS)[number];
@@ -21,6 +22,7 @@ export interface MutreeKey {
 export type MutreeAudio = Record<number, MutreeInstrument | null>;
 
 export type MutreeAudioMap = Record<string, MutreeAudio>;
+export type MutreeVolumeMap = Record<string, Volume>;
 
 export type MutreeAudioName = {
   label: string;
