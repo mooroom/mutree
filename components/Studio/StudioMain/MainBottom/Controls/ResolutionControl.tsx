@@ -52,7 +52,7 @@ export default function ResolutionControl() {
 
   return (
     <Combobox store={combobox} onOptionSubmit={handleOptionSubmit} position="top">
-      <Grid>
+      <Grid align="center">
         <Grid.Col span={2}>
           <Text size="xs" c="gray.7">
             해상도

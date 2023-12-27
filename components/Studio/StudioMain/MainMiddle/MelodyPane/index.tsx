@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { IconRobot } from '@tabler/icons-react';
+import { IconSparkles } from '@tabler/icons-react';
 import { useRecoilState } from 'recoil';
 import classes from './index.module.css';
 import Lane from './Lane';
@@ -24,7 +24,7 @@ export default function MelodyPane() {
         <div className={classes.paneLeftBottom}>
           <Button
             fullWidth
-            rightSection={<IconRobot size={20} />}
+            rightSection={<IconSparkles size={20} />}
             variant="gradient"
             gradient={{ from: 'teal.5', to: 'orange.3', deg: 100 }}
             onClick={handleGenerateMelody}

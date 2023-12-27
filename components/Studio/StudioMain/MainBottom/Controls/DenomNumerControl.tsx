@@ -30,7 +30,7 @@ export default function DenomNumerControl() {
   };
 
   return (
-    <Grid>
+    <Grid align="center">
       <Grid.Col span={2}>
         <Text size="xs" c="gray.7">
           박자
