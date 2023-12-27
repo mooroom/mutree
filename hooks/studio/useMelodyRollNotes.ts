@@ -28,6 +28,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
   );
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
+  const [selectedNoteIds, setSelectedNoteIds] = React.useState<string[]>([]);
   const [isRegionLoading, setIsRegionLoading] = React.useState(false);
   const [isIntializedByUrl, setIsIntializedByUrl] = React.useState(false);
 
@@ -72,6 +73,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
         endStep: timelinePosition + steps,
       };
 
+      setSelectedNoteIds([newNote.id]);
       setRollNotes([...rollNotes, newNote]);
     },
     [getNoteId, audio, keys, rollNotes, scrollLeft, unitHeight, resolution, bpm]
@@ -284,6 +286,7 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
 
   return {
     rollNotes,
+    selectedNoteIds,
     regionRef,
     isRegionLoading,
     handleMouseDownRegion,

@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { IconPencil, IconPointer, IconTrash } from '@tabler/icons-react';
+import { IconEraser, IconPencil, IconPointer } from '@tabler/icons-react';
 import usePickOne from '@/hooks/studio/usePickOne';
 
 export default function MouseControls() {
@@ -29,7 +29,7 @@ export default function MouseControls() {
         fullWidth
         onClick={() => setValue('eraser')}
       >
-        <IconTrash size={14} />
+        <IconEraser size={14} />
       </Button>
     </Button.Group>
   );

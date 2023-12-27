@@ -1,4 +1,4 @@
-import { MantineColor, darken } from '@mantine/core';
+import { MantineColor, darken, lighten } from '@mantine/core';
 import React from 'react';
 import { STEP_WIDTH } from '@/constants/studio';
 import classes from './RollNote.module.css';
@@ -10,6 +10,8 @@ interface Props {
   steps: number;
   unitHeight: number;
   color: MantineColor;
+  isSelected?: boolean;
+  isAi?: boolean;
   onSetIsResizing: (resizing: boolean) => void;
   onSetIsDragging: (dragging: boolean) => void;
   onResizeNote: (id: string, nextSteps: number) => void;
@@ -24,6 +26,8 @@ export default function RollNote({
   steps,
   color,
   unitHeight,
+  isSelected,
+  isAi,
   onResizeNote,
   onSetIsDragging,
   onSetIsResizing,
@@ -31,8 +35,9 @@ export default function RollNote({
   onDeleteNote,
 }: Props) {
   const colorStyles: React.CSSProperties = {
-    backgroundColor: color,
-    borderColor: darken(color, 0.3),
+    backgroundColor: isSelected ? lighten(color, 0.3) : color,
+    borderColor: isSelected ? 'white' : darken(color, 0.2),
+    opacity: isAi ? 0.7 : 1,
   };
 
   const [active, setActive] = React.useState(false);
