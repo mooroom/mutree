@@ -1,9 +1,9 @@
-import { Button, Divider } from '@mantine/core';
-import classes from './index.module.css';
+import { Button } from '@mantine/core';
 import { IconRobot } from '@tabler/icons-react';
+import { useRecoilState } from 'recoil';
+import classes from './index.module.css';
 import Lane from './Lane';
 import { generateMelodyTriggeredAtom } from '@/atoms/studio';
-import { useRecoilState } from 'recoil';
 import Controls from './Controls';
 
 export default function MelodyPane() {

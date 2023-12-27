@@ -1,7 +1,7 @@
-import { Group, Text, Select } from '@mantine/core';
-import { NUMERATORS, DENOMINATORS } from '@/constants/studio';
+import { Group, Text, Select, Grid } from '@mantine/core';
 import type { ComboboxItem } from '@mantine/core';
 import { useRecoilState } from 'recoil';
+import { NUMERATORS, DENOMINATORS } from '@/constants/studio';
 import { denomAtom, numerAtom } from '@/atoms/studio';
 import { Denominator, Numerator } from '@/types/studio';
 
@@ -30,11 +30,19 @@ export default function DenomNumerControl() {
   };
 
   return (
-    <Group>
-      <Text>박자:</Text>
-      <Select w={70} value={numerValue} data={numerOptions} onChange={handleNumerChange} />
-      /
-      <Select w={70} value={denomValue} data={denomOptions} onChange={handleDenomChange} />
-    </Group>
+    <Grid>
+      <Grid.Col span={2}>
+        <Text size="xs" c="gray.7">
+          박자
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={10}>
+        <Group wrap="nowrap">
+          <Select value={numerValue} data={numerOptions} onChange={handleNumerChange} />
+          /
+          <Select value={denomValue} data={denomOptions} onChange={handleDenomChange} />
+        </Group>
+      </Grid.Col>
+    </Grid>
   );
 }

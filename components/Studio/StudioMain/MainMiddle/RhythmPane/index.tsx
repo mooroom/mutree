@@ -5,12 +5,22 @@ import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 import Lane from './Lane';
 
 export default function RhythmPane() {
-  const { rhythmAudioNameList, selectedRhythmAudioName, handleRhythmAudioNameChange } =
-    useMutreeAudioContext();
+  const {
+    rhythmVolumeMap,
+    rhythmAudioNameList,
+    selectedRhythmAudioName,
+    handleRhythmAudioNameChange,
+  } = useMutreeAudioContext();
 
   const handleChange = (value: string | null) => {
     const audioName = rhythmAudioNameList.find((v) => v.value === value);
     if (audioName) handleRhythmAudioNameChange(audioName);
+  };
+
+  const handleVolumeChange = (value: number) => {
+    const vNode = rhythmVolumeMap[selectedRhythmAudioName.value];
+    // value: 0 ~ 10, volume: -20 ~ 0
+    vNode.volume.value = value === 0 ? -Infinity : (value - 10) * 2;
   };
 
   return (
@@ -29,7 +39,15 @@ export default function RhythmPane() {
               value={selectedRhythmAudioName.value}
               onChange={handleChange}
             />
-            <Slider size="xs" color="cyan" />
+            <Slider
+              size="xs"
+              color="cyan"
+              defaultValue={5}
+              min={0}
+              max={10}
+              step={1}
+              onChange={handleVolumeChange}
+            />
           </div>
         </div>
       </div>

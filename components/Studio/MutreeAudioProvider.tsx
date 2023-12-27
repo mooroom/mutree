@@ -11,6 +11,7 @@ type ContextType = {
   handleMelodyAudioNameChange: (value: MutreeAudioName) => void;
 
   rhythmAudioMap: MutreeAudioMap;
+  rhythmVolumeMap: MutreeVolumeMap;
   rhythmAudioNameList: MutreeAudioName[];
   selectedRhythmAudioName: MutreeAudioName;
   handleRhythmAudioNameChange: (value: MutreeAudioName) => void;
@@ -32,6 +33,7 @@ export default function MutreeAudioProvider({ children }: { children: React.Reac
 
   const {
     audioMap: rhythmAudioMap,
+    volumeMap: rhythmVolumeMap,
     isAudioLoaded: isRhythmAudioLoaded,
     audioNameList: rhythmAudioNameList,
     selectedAudioName: selectedRhythmAudioName,
@@ -47,6 +49,7 @@ export default function MutreeAudioProvider({ children }: { children: React.Reac
         selectedMelodyAudioName,
         handleMelodyAudioNameChange,
 
+        rhythmVolumeMap,
         rhythmAudioMap,
         rhythmAudioNameList,
         selectedRhythmAudioName,

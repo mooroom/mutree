@@ -1,6 +1,6 @@
 import { Select, Slider, ThemeIcon } from '@mantine/core';
-import classes from './Controls.module.css';
 import { IconPiano } from '@tabler/icons-react';
+import classes from './Controls.module.css';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function InstControls() {
@@ -18,8 +18,8 @@ export default function InstControls() {
 
   const handleVolumeChange = (value: number) => {
     const vNode = melodyVolumeMap[selectedMelodyAudioName.value];
-    // value: 0 ~ 10, volume: -20 ~ 0
-    vNode.volume.value = value === 0 ? -Infinity : (value - 10) * 2;
+    // value: 0 ~ 10, volume: -50 ~ 0
+    vNode.volume.value = value === 0 ? -Infinity : (value - 10) * 5;
   };
 
   return (

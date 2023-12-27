@@ -6,7 +6,7 @@ export default function Controls() {
   return (
     <>
       <InstControls />
-      <Divider />
+      <Divider my="lg" />
       <NoteControls />
     </>
   );

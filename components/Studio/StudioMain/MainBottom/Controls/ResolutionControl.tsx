@@ -1,9 +1,9 @@
 import React from 'react';
-import { RESOLUTIONS } from '@/constants/studio';
-import { Group, Combobox, useCombobox, InputBase, Input, Text } from '@mantine/core';
+import { Group, Combobox, useCombobox, InputBase, Input, Text, Grid } from '@mantine/core';
 import Image from 'next/image';
-import { resolutionAtom } from '@/atoms/studio';
 import { useRecoilState } from 'recoil';
+import { resolutionAtom } from '@/atoms/studio';
+import { RESOLUTIONS } from '@/constants/studio';
 import { Resolution } from '@/types/studio';
 
 export default function ResolutionControl() {
@@ -35,15 +35,14 @@ export default function ResolutionControl() {
     </Combobox.Option>,
   ];
 
-  const renderValue = (val: string) => {
-    return val === RESOLUTIONS[0] ? (
+  const renderValue = (val: string) =>
+    val === RESOLUTIONS[0] ? (
       <span>4분음표</span>
     ) : val === RESOLUTIONS[1] ? (
       <span>8분음표</span>
     ) : val === RESOLUTIONS[2] ? (
       <span>16분음표</span>
     ) : null;
-  };
 
   const handleOptionSubmit = (val: string) => {
     setResolution(val as Resolution);
@@ -52,21 +51,27 @@ export default function ResolutionControl() {
   };
 
   return (
-    <Combobox store={combobox} onOptionSubmit={handleOptionSubmit}>
-      <Group>
-        <Text>해상도:</Text>
-        <Combobox.Target>
-          <InputBase
-            component="button"
-            pointer
-            rightSection={<Combobox.Chevron />}
-            onClick={() => combobox.toggleDropdown()}
-            w={120}
-          >
-            {value ? renderValue(value) : <Input.Placeholder>해상도 선택</Input.Placeholder>}
-          </InputBase>
-        </Combobox.Target>
-      </Group>
+    <Combobox store={combobox} onOptionSubmit={handleOptionSubmit} position="top">
+      <Grid>
+        <Grid.Col span={2}>
+          <Text size="xs" c="gray.7">
+            해상도
+          </Text>
+        </Grid.Col>
+        <Grid.Col span={10}>
+          <Combobox.Target>
+            <InputBase
+              component="button"
+              pointer
+              rightSection={<Combobox.Chevron />}
+              onClick={() => combobox.toggleDropdown()}
+              w="100%"
+            >
+              {value ? renderValue(value) : <Input.Placeholder>해상도 선택</Input.Placeholder>}
+            </InputBase>
+          </Combobox.Target>
+        </Grid.Col>
+      </Grid>
 
       <Combobox.Dropdown>
         <Combobox.Options>{options}</Combobox.Options>

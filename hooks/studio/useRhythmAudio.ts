@@ -1,10 +1,9 @@
 import React from 'react';
-import { SamplerOptions, Frequency } from 'tone';
+import { SamplerOptions, Frequency, Volume } from 'tone';
 import type { Note } from 'tone/build/esm/core/type/Units';
-import { MutreeAudio, MutreeAudioMap, MutreeAudioName } from '@/types/studio';
+import { MutreeAudio, MutreeAudioMap, MutreeAudioName, MutreeVolumeMap } from '@/types/studio';
 import rhythmAudioData from './rhythmAudio.json';
 import MutreeInstrument from '@/classes/MutreeInstrument';
-import 'regenerator-runtime/runtime'; // Add import statement for regenerator-runtime
 
 const getRhythmAudioOptions = (
   note: string,
@@ -25,6 +24,7 @@ const getRhythmAudioOptions = (
 
 export default function useRhythmAudio() {
   const audioMapRef = React.useRef<MutreeAudioMap>({});
+  const volumeMapRef = React.useRef<MutreeVolumeMap>({});
   const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
 
   const [audioNameList] = React.useState<MutreeAudioName[]>(rhythmAudioData.audioList);
@@ -43,9 +43,11 @@ export default function useRhythmAudio() {
     const { audioList } = rhythmAudioData;
 
     const audioMap: MutreeAudioMap = {};
+    const volumeMap: MutreeVolumeMap = {};
 
     audioList.forEach((audioName) => {
       const audio: MutreeAudio = {};
+      const volume = new Volume().toDestination();
 
       const notes = ['C0', 'D0', 'E0', 'F0', 'G0', 'A0', 'B0'].reverse() as Note[];
 
@@ -56,12 +58,14 @@ export default function useRhythmAudio() {
           getRhythmAudioOptions(note, audioName.value, () => {
             audio[midiNote] = null;
           })
-        ).toDestination();
+        ).connect(volume);
       });
 
       audioMap[audioName.value] = audio;
+      volumeMap[audioName.value] = volume;
     });
     audioMapRef.current = audioMap;
+    volumeMapRef.current = volumeMap;
 
     const checkAudioLoaded = setInterval(() => {
       const am = audioMapRef.current;
@@ -93,6 +97,7 @@ export default function useRhythmAudio() {
 
   return {
     audioMap: audioMapRef.current,
+    volumeMap: volumeMapRef.current,
     isAudioLoaded,
     audioNameList,
     selectedAudioName,
