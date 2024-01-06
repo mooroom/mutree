@@ -3,7 +3,7 @@ import { IconPiano } from '@tabler/icons-react';
 import classes from './Controls.module.css';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
-export default function InstControls() {
+export default function MelodyInstControls() {
   const {
     melodyVolumeMap,
     melodyAudioNameList,

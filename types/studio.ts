@@ -1,7 +1,13 @@
 import { Volume } from 'tone';
 import MutreeEvent from '@/classes/MutreeEvent';
 import MutreeInstrument from '@/classes/MutreeInstrument';
-import { DENOMINATORS, NUMERATORS, RESOLUTIONS, SCALE_NAMES } from '@/constants/studio';
+import {
+  DENOMINATORS,
+  MOUSE_CONTROL_OPTIONS,
+  NUMERATORS,
+  RESOLUTIONS,
+  SCALE_NAMES,
+} from '@/constants/studio';
 
 export type PlayState = 'started' | 'stopped' | 'paused';
 export type Resolution = (typeof RESOLUTIONS)[number];
@@ -42,3 +48,5 @@ export interface RollNote {
   isSelected?: boolean;
   isAI?: boolean;
 }
+
+export type MouseControl = keyof typeof MOUSE_CONTROL_OPTIONS;

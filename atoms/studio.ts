@@ -2,6 +2,7 @@ import { atom, selector } from 'recoil';
 import * as Tone from 'tone';
 import * as IStudio from '@/types/studio';
 import { getMelodyKeys, getRhythmKeys } from '@/utils/studio';
+import { MOUSE_CONTROL_OPTIONS } from '@/constants/studio';
 
 export const isToneInitializedAtom = atom<boolean>({
   key: 'isToneInitializedAtom',
@@ -120,4 +121,14 @@ export const melodyRollNotesAtom = atom<IStudio.RollNote[]>({
 export const rhythmRollNotesAtom = atom<IStudio.RollNote[]>({
   key: 'rhythmRollNotesAtom',
   default: [],
+});
+
+export const melodyMouseControlAtom = atom<string>({
+  key: 'mouseControlAtom',
+  default: MOUSE_CONTROL_OPTIONS.PENCIL,
+});
+
+export const rhythmMouseControlAtom = atom<string>({
+  key: 'rhythmMouseControlAtom',
+  default: MOUSE_CONTROL_OPTIONS.PENCIL,
 });

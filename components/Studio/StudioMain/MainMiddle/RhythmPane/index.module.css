@@ -14,6 +14,11 @@
   border-right: 1px solid var(--mantine-color-gray-2);
 }
 
+.paneLeftTop {
+  display: flex;
+  flex-direction: column;
+}
+
 .paneRight {
   flex: 1;
 }

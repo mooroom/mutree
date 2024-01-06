@@ -41,3 +41,9 @@ export const KO_NOTE_NAME: { [key: string]: string } = {
   A: '라',
   B: '시',
 };
+
+export const MOUSE_CONTROL_OPTIONS = {
+  POINTER: 'pointer',
+  PENCIL: 'pencil',
+  ERASER: 'eraser',
+} as const;

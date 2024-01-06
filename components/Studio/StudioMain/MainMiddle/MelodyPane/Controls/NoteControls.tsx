@@ -6,7 +6,7 @@ import classes from './Controls.module.css';
 import { ScaleName } from '@/types/studio';
 import { getSelectOptionsRootNote, getSelectOptionsScaleName } from '@/utils/studio';
 
-export default function NoteControls() {
+export default function MelodyNoteControls() {
   const [rootNote, setRootNote] = useRecoilState(melodyRootNoteAtom);
   const [scaleName, setScaleName] = useRecoilState(melodyScaleNameAtom);
 

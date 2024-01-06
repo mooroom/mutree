@@ -1,0 +1,12 @@
+.instControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.instControlRight {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 144px;
+}
