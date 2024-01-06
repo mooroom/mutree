@@ -66,7 +66,6 @@ export default function Lane() {
               ref={regionRef}
               onMouseDown={handleMouseDownRegion}
             >
-              <LoadingOverlay visible={isRegionLoading} />
               {rollNotes.map((v) => (
                 <RollNote
                   key={v.id}
@@ -86,6 +85,11 @@ export default function Lane() {
                 />
               ))}
             </div>
+            <LoadingOverlay
+              visible={isRegionLoading}
+              zIndex={1000}
+              loaderProps={{ color: 'teal', type: 'bars' }}
+            />
           </div>
         </div>
       </div>
