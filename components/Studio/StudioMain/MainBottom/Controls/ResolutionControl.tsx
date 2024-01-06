@@ -53,12 +53,12 @@ export default function ResolutionControl() {
   return (
     <Combobox store={combobox} onOptionSubmit={handleOptionSubmit} position="top">
       <Grid align="center">
-        <Grid.Col span={2}>
+        <Grid.Col span={3}>
           <Text size="xs" c="gray.7">
-            해상도
+            기준음표
           </Text>
         </Grid.Col>
-        <Grid.Col span={10}>
+        <Grid.Col span={9}>
           <Combobox.Target>
             <InputBase
               component="button"
@@ -67,7 +67,7 @@ export default function ResolutionControl() {
               onClick={() => combobox.toggleDropdown()}
               w="100%"
             >
-              {value ? renderValue(value) : <Input.Placeholder>해상도 선택</Input.Placeholder>}
+              {value ? renderValue(value) : <Input.Placeholder>기준음표 선택</Input.Placeholder>}
             </InputBase>
           </Combobox.Target>
         </Grid.Col>

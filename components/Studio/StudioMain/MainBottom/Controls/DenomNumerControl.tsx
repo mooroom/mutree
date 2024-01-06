@@ -31,12 +31,12 @@ export default function DenomNumerControl() {
 
   return (
     <Grid align="center">
-      <Grid.Col span={2}>
+      <Grid.Col span={3}>
         <Text size="xs" c="gray.7">
           박자
         </Text>
       </Grid.Col>
-      <Grid.Col span={10}>
+      <Grid.Col span={9}>
         <Group wrap="nowrap">
           <Select value={numerValue} data={numerOptions} onChange={handleNumerChange} />
           /
