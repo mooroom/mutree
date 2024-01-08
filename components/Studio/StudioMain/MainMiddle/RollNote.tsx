@@ -1,6 +1,6 @@
+import { STEP_WIDTH } from '@/constants/studio';
 import { MantineColor, darken, lighten } from '@mantine/core';
 import React from 'react';
-import { STEP_WIDTH } from '@/constants/studio';
 import classes from './RollNote.module.css';
 
 interface Props {
@@ -55,6 +55,7 @@ export default function RollNote({
       const handleMouseMove = (event: MouseEvent) => {
         const dx = event.clientX - startX;
         const nextSteps = Math.floor(dx / STEP_WIDTH) + steps;
+        // fixme: debounce 필요
         if (nextSteps < 1) return;
         onResizeNote(id, nextSteps);
       };

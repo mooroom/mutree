@@ -1,17 +1,17 @@
-import React from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import * as mm from '@magenta/music';
 import {
-  scrollLeftAtom,
-  resolutionAtom,
   bpmAtom,
   generateMelodyTriggeredAtom,
   melodyMouseControlAtom,
+  resolutionAtom,
+  scrollLeftAtom,
 } from '@/atoms/studio';
 import MutreeEvent from '@/classes/MutreeEvent';
-import { MutreeAudio, MutreeKey, RollNote } from '@/types/studio';
 import { MOUSE_CONTROL_OPTIONS, NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
+import { MutreeAudio, MutreeKey, RollNote } from '@/types/studio';
 import { convertToINoteSequence, getDurationOfSixteenth } from '@/utils/studio';
+import * as mm from '@magenta/music';
+import React from 'react';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
 interface Props {
   idPrefix: string;
@@ -21,13 +21,14 @@ interface Props {
 }
 
 export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }: Props) {
-  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const resolution = useRecoilValue(resolutionAtom);
   const bpm = useRecoilValue(bpmAtom);
+  const mouseControl = useRecoilValue(melodyMouseControlAtom);
+
+  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const [generateNotesTriggered, setGenerateNotesTriggered] = useRecoilState(
     generateMelodyTriggeredAtom
   );
-  const mouseControl = useRecoilValue(melodyMouseControlAtom);
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
   // fixme: 필요없다고 판단되면 제거
@@ -43,19 +44,8 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
     return `${idPrefix}-note-${noteIdRef.current}`;
   }, [idPrefix]);
 
-  const addNote = (note: RollNote) => {
-    setRollNotes((prev) => [...prev, note]);
-  };
-
   const deleteNote = (id: string) => {
-    const newNotes = rollNotes.filter((note) => {
-      if (note.id === id) {
-        note.event.delete();
-        return false;
-      }
-      return true;
-    });
-    setRollNotes(newNotes);
+    setRollNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
   const handleMouseDownRegion = React.useCallback(
@@ -99,43 +89,46 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
     [getNoteId, audio, keys, rollNotes, scrollLeft, unitHeight, resolution, bpm]
   );
 
-  const handleMouseDownNote = React.useCallback(
-    (id: string, shiftKeyPressed: boolean) => {
-      if (mouseControl === MOUSE_CONTROL_OPTIONS.ERASER) {
-        handleDeleteNote?.(id);
-        return;
-      }
+  const handleMouseDownNote = useRecoilCallback(
+    ({ snapshot }) =>
+      (id: string, shiftKeyPressed: boolean) => {
+        const mouseControlValue = snapshot.getLoadable(melodyMouseControlAtom).contents;
 
-      if (!shiftKeyPressed) {
-        setRollNotes((prev) =>
-          prev.map((note) => {
-            if (note.id === id) {
+        if (mouseControlValue === MOUSE_CONTROL_OPTIONS.ERASER) {
+          deleteNote(id);
+          return;
+        }
+
+        if (!shiftKeyPressed) {
+          setRollNotes((prev) =>
+            prev.map((note) => {
+              if (note.id === id) {
+                return {
+                  ...note,
+                  isSelected: true,
+                };
+              }
               return {
                 ...note,
-                isSelected: true,
+                isSelected: false,
               };
-            }
-            return {
-              ...note,
-              isSelected: false,
-            };
-          })
-        );
-      } else {
-        setRollNotes((prev) =>
-          prev.map((note) => {
-            if (note.id === id) {
-              return {
-                ...note,
-                isSelected: !note.isSelected,
-              };
-            }
-            return note;
-          })
-        );
-      }
-    },
-    [rollNotes, mouseControl, handleDeleteNote]
+            })
+          );
+        } else {
+          setRollNotes((prev) =>
+            prev.map((note) => {
+              if (note.id === id) {
+                return {
+                  ...note,
+                  isSelected: !note.isSelected,
+                };
+              }
+              return note;
+            })
+          );
+        }
+      },
+    []
   );
 
   const handleResizeNote = React.useCallback(
@@ -159,6 +152,8 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
 
   const handleDragNote = React.useCallback(
     (id: string, nextLeft: number, nextTop: number) => {
+      console.log('dragging');
+      console.log(rollNotes[0]);
       const absoluteX = nextLeft + scrollLeft;
       const timelinePosition = Math.floor(absoluteX / STEP_WIDTH);
 
@@ -328,6 +323,14 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
     setRollNotes(newNotes);
     setIsIntializedByUrl(true);
   }, [isIntializedByUrl]);
+
+  React.useEffect(() => {
+    console.log(rollNotes);
+  }, [rollNotes]);
+
+  React.useEffect(() => {
+    console.log(mouseControl);
+  }, [mouseControl]);
 
   return {
     rollNotes,
