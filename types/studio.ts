@@ -45,7 +45,7 @@ export interface RollNote {
   pitch: number;
   startStep: number;
   endStep: number;
-  isSelected?: boolean;
+  isSelected: boolean;
   isAI?: boolean;
 }
 

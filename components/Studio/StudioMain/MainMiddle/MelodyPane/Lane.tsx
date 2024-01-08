@@ -25,10 +25,9 @@ export default function Lane() {
     regionRef,
     rollNotes,
     isRegionLoading,
-    selectedNoteIds,
-    handleDeleteNote,
     handleDragNote,
     handleMouseDownRegion,
+    handleMouseDownNote,
     handleResizeNote,
     handleSetIsDragging,
     handleSetIsResizing,
@@ -75,13 +74,13 @@ export default function Lane() {
                   steps={v.steps}
                   unitHeight={MELODY_UNIT_HEIGHT}
                   color={v.isAI ? theme.colors.orange[3] : theme.colors.teal[5]}
-                  isSelected={selectedNoteIds.includes(v.id)}
+                  isSelected={v.isSelected}
                   isAi={v.isAI}
+                  onMouseDown={handleMouseDownNote}
                   onSetIsResizing={handleSetIsResizing}
                   onSetIsDragging={handleSetIsDragging}
                   onResizeNote={handleResizeNote}
                   onDragNote={handleDragNote}
-                  onDeleteNote={handleDeleteNote}
                 />
               ))}
             </div>

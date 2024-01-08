@@ -6,10 +6,11 @@ import {
   resolutionAtom,
   bpmAtom,
   generateMelodyTriggeredAtom,
+  melodyMouseControlAtom,
 } from '@/atoms/studio';
 import MutreeEvent from '@/classes/MutreeEvent';
 import { MutreeAudio, MutreeKey, RollNote } from '@/types/studio';
-import { NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
+import { MOUSE_CONTROL_OPTIONS, NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
 import { convertToINoteSequence, getDurationOfSixteenth } from '@/utils/studio';
 
 interface Props {
@@ -26,9 +27,11 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
   const [generateNotesTriggered, setGenerateNotesTriggered] = useRecoilState(
     generateMelodyTriggeredAtom
   );
+  const mouseControl = useRecoilValue(melodyMouseControlAtom);
 
   const [rollNotes, setRollNotes] = React.useState<RollNote[]>([]);
-  const [selectedNoteIds, setSelectedNoteIds] = React.useState<string[]>([]);
+  // fixme: 필요없다고 판단되면 제거
+  // const [selectedNoteIds, setSelectedNoteIds] = React.useState<string[]>([]);
   const [isRegionLoading, setIsRegionLoading] = React.useState(false);
   const [isIntializedByUrl, setIsIntializedByUrl] = React.useState(false);
 
@@ -39,6 +42,21 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
     noteIdRef.current += 1;
     return `${idPrefix}-note-${noteIdRef.current}`;
   }, [idPrefix]);
+
+  const addNote = (note: RollNote) => {
+    setRollNotes((prev) => [...prev, note]);
+  };
+
+  const deleteNote = (id: string) => {
+    const newNotes = rollNotes.filter((note) => {
+      if (note.id === id) {
+        note.event.delete();
+        return false;
+      }
+      return true;
+    });
+    setRollNotes(newNotes);
+  };
 
   const handleMouseDownRegion = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,12 +89,53 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
         pitch,
         startStep: timelinePosition,
         endStep: timelinePosition + steps,
+        isSelected: true,
       };
 
-      setSelectedNoteIds([newNote.id]);
-      setRollNotes([...rollNotes, newNote]);
+      // setSelectedNoteIds([newNote.id]);
+      const updatedRollNotes = rollNotes.map((note) => ({ ...note, isSelected: false }));
+      setRollNotes([...updatedRollNotes, newNote]);
     },
     [getNoteId, audio, keys, rollNotes, scrollLeft, unitHeight, resolution, bpm]
+  );
+
+  const handleMouseDownNote = React.useCallback(
+    (id: string, shiftKeyPressed: boolean) => {
+      if (mouseControl === MOUSE_CONTROL_OPTIONS.ERASER) {
+        handleDeleteNote?.(id);
+        return;
+      }
+
+      if (!shiftKeyPressed) {
+        setRollNotes((prev) =>
+          prev.map((note) => {
+            if (note.id === id) {
+              return {
+                ...note,
+                isSelected: true,
+              };
+            }
+            return {
+              ...note,
+              isSelected: false,
+            };
+          })
+        );
+      } else {
+        setRollNotes((prev) =>
+          prev.map((note) => {
+            if (note.id === id) {
+              return {
+                ...note,
+                isSelected: !note.isSelected,
+              };
+            }
+            return note;
+          })
+        );
+      }
+    },
+    [rollNotes, mouseControl, handleDeleteNote]
   );
 
   const handleResizeNote = React.useCallback(
@@ -127,20 +186,6 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
       setRollNotes(newNotes);
     },
     [rollNotes, audio, keys, unitHeight, scrollLeft, bpm]
-  );
-
-  const handleDeleteNote = React.useCallback(
-    (id: string) => {
-      const newNotes = rollNotes.filter((note) => {
-        if (note.id === id) {
-          note.event.delete();
-          return false;
-        }
-        return true;
-      });
-      setRollNotes(newNotes);
-    },
-    [rollNotes]
   );
 
   const handleSetIsResizing = React.useCallback((resizing: boolean) => {
@@ -286,13 +331,13 @@ export default function useMelodyRollNotes({ idPrefix, unitHeight, audio, keys }
 
   return {
     rollNotes,
-    selectedNoteIds,
+    // selectedNoteIds,
     regionRef,
     isRegionLoading,
     handleMouseDownRegion,
+    handleMouseDownNote,
     handleResizeNote,
     handleDragNote,
-    handleDeleteNote,
     handleSetIsResizing,
     handleSetIsDragging,
   };

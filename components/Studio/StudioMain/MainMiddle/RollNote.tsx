@@ -12,11 +12,11 @@ interface Props {
   color: MantineColor;
   isSelected?: boolean;
   isAi?: boolean;
+  onMouseDown: (id: string, shiftKeyPressed: boolean) => void;
   onSetIsResizing: (resizing: boolean) => void;
   onSetIsDragging: (dragging: boolean) => void;
   onResizeNote: (id: string, nextSteps: number) => void;
   onDragNote: (id: string, nextLeft: number, nextTop: number) => void;
-  onDeleteNote: (id: string) => void;
 }
 
 export default function RollNote({
@@ -28,25 +28,27 @@ export default function RollNote({
   unitHeight,
   isSelected,
   isAi,
+  onMouseDown,
   onResizeNote,
   onSetIsDragging,
   onSetIsResizing,
   onDragNote,
-  onDeleteNote,
 }: Props) {
+  // const mouseControlState = useRecoilValue(melodyMouseControlAtom);
+
   const colorStyles: React.CSSProperties = {
     backgroundColor: isSelected ? lighten(color, 0.3) : color,
     borderColor: isSelected ? 'white' : darken(color, 0.2),
     opacity: isAi ? 0.7 : 1,
   };
 
-  const [active, setActive] = React.useState(false);
+  // const [active, setActive] = React.useState(false);
 
   const handleMouseDownHead = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
+      onMouseDown(id, e.shiftKey);
       onSetIsResizing(true);
-      setActive(true);
 
       const startX = e.clientX;
 
@@ -59,7 +61,6 @@ export default function RollNote({
 
       const handleMouseUp = () => {
         onSetIsResizing(false);
-        setActive(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -73,8 +74,8 @@ export default function RollNote({
   const handleMouseDownContainer = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
+      onMouseDown(id, e.shiftKey);
       onSetIsDragging(true);
-      setActive(true);
 
       const startX = e.clientX;
       const startY = e.clientY;
@@ -93,7 +94,6 @@ export default function RollNote({
 
       const handleMouseUp = () => {
         onSetIsDragging(false);
-        setActive(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -104,13 +104,9 @@ export default function RollNote({
     [onDragNote, id, left, top, unitHeight, onSetIsDragging]
   );
 
-  const handleDoubleClick = React.useCallback(() => {
-    onDeleteNote(id);
-  }, [onDeleteNote, id]);
-
   return (
     <div
-      role="button"
+      role="none"
       className={classes.container}
       style={{
         left,
@@ -120,9 +116,8 @@ export default function RollNote({
         ...colorStyles,
       }}
       onMouseDown={handleMouseDownContainer}
-      onDoubleClick={handleDoubleClick}
-      data-active={active}
-      tabIndex={0} // Add tabIndex attribute to make the element focusable
+      // 필요하면 추가
+      // onDoubleClick={handleDoubleClick}
     >
       <div className={classes.head} role="none" onMouseDown={handleMouseDownHead} />
     </div>

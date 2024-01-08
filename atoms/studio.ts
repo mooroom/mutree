@@ -132,3 +132,14 @@ export const rhythmMouseControlAtom = atom<string>({
   key: 'rhythmMouseControlAtom',
   default: MOUSE_CONTROL_OPTIONS.PENCIL,
 });
+
+// 필요없다고 판단되면 제거
+// export const melodySelectedNoteIdsAtom = atom<string[]>({
+//   key: 'melodySelectedNoteIdsAtom',
+//   default: [],
+// });
+
+// export const rhythmSelectedNoteIdsAtom = atom<string[]>({
+//   key: 'rhythmSelectedNoteIdsAtom',
+//   default: [],
+// });
