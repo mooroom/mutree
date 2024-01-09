@@ -43,6 +43,7 @@ export default function useGridLinesRef({ numUnits, unitHeight, highlightColor }
         const mark = Math.floor((i * gap + scrollLeft) / gap);
         const stepsPerBeat = 16 / denom;
 
+        ctx.globalAlpha = 0.5;
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.clientHeight);

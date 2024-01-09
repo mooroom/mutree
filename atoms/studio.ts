@@ -113,6 +113,11 @@ export const generateMelodyTriggeredAtom = atom<boolean>({
   default: false,
 });
 
+export const generateRhythmTriggeredAtom = atom<boolean>({
+  key: 'generateRhythmTriggeredAtom',
+  default: false,
+});
+
 export const melodyRollNotesAtom = atom<IStudio.RollNote[]>({
   key: 'melodyRollNotesAtom',
   default: [],

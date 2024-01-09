@@ -5,7 +5,7 @@ import classes from './Lane.module.css';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
-import useMelodyRollNotes from '@/hooks/studio/useMelodyRollNotes';
+import useRollNotes from '@/hooks/studio/useRollNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -16,7 +16,7 @@ export default function Lane() {
   const gridLinesRef = useGridLinesRef({
     numUnits: MELODY_UNIT_NUM,
     unitHeight: MELODY_UNIT_HEIGHT,
-    highlightColor: theme.colors.teal[3],
+    // highlightColor: theme.colors.teal[3],
   });
 
   const { melodyAudioMap, selectedMelodyAudioName } = useMutreeAudioContext();
@@ -29,10 +29,8 @@ export default function Lane() {
     handleMouseDownRegion,
     handleMouseDownNote,
     handleResizeNote,
-    handleSetIsDragging,
-    handleSetIsResizing,
-  } = useMelodyRollNotes({
-    idPrefix: 'melody',
+  } = useRollNotes({
+    layer: 'melody',
     unitHeight: MELODY_UNIT_HEIGHT,
     audio: melodyAudioMap[selectedMelodyAudioName.value],
     keys: melodyKeys,
@@ -77,8 +75,6 @@ export default function Lane() {
                   isSelected={v.isSelected}
                   isAi={v.isAI}
                   onMouseDown={handleMouseDownNote}
-                  onSetIsResizing={handleSetIsResizing}
-                  onSetIsDragging={handleSetIsDragging}
                   onResizeNote={handleResizeNote}
                   onDragNote={handleDragNote}
                 />

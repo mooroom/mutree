@@ -6,7 +6,7 @@ import classes from './Lane.module.css';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
 import { RHYTHM_UNIT_HEIGHT, RHYTHM_UNIT_NUM } from '@/constants/studio';
 import RollNote from '../RollNote';
-import useRhythmRollNotes from '@/hooks/studio/useRhythmRollNotes';
+import useRollNotes from '@/hooks/studio/useRollNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -24,14 +24,12 @@ export default function Lane() {
   const {
     regionRef,
     rollNotes,
-    handleDeleteNote,
     handleDragNote,
     handleMouseDownRegion,
+    handleMouseDownNote,
     handleResizeNote,
-    handleSetIsDragging,
-    handleSetIsResizing,
-  } = useRhythmRollNotes({
-    idPrefix: 'rhythm',
+  } = useRollNotes({
+    layer: 'rhythm',
     unitHeight: RHYTHM_UNIT_HEIGHT,
     audio: rhythmAudioMap[selectedRhythmAudioName.value],
     keys: rhythmKeys,
@@ -73,11 +71,10 @@ export default function Lane() {
                   steps={v.steps}
                   unitHeight={RHYTHM_UNIT_HEIGHT}
                   color={theme.colors.cyan[5]}
-                  onSetIsResizing={handleSetIsResizing}
-                  onSetIsDragging={handleSetIsDragging}
+                  isSelected={v.isSelected}
+                  onMouseDown={handleMouseDownNote}
                   onResizeNote={handleResizeNote}
                   onDragNote={handleDragNote}
-                  onDeleteNote={handleDeleteNote}
                 />
               ))}
             </div>

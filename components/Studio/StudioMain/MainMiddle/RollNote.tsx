@@ -13,8 +13,6 @@ interface Props {
   isSelected?: boolean;
   isAi?: boolean;
   onMouseDown: (id: string, shiftKeyPressed: boolean) => void;
-  onSetIsResizing: (resizing: boolean) => void;
-  onSetIsDragging: (dragging: boolean) => void;
   onResizeNote: (id: string, nextSteps: number) => void;
   onDragNote: (id: string, nextLeft: number, nextTop: number) => void;
 }
@@ -30,8 +28,6 @@ export default function RollNote({
   isAi,
   onMouseDown,
   onResizeNote,
-  onSetIsDragging,
-  onSetIsResizing,
   onDragNote,
 }: Props) {
   // const mouseControlState = useRecoilValue(melodyMouseControlAtom);
@@ -48,7 +44,6 @@ export default function RollNote({
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       onMouseDown(id, e.shiftKey);
-      onSetIsResizing(true);
 
       const startX = e.clientX;
 
@@ -61,7 +56,6 @@ export default function RollNote({
       };
 
       const handleMouseUp = () => {
-        onSetIsResizing(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -69,14 +63,13 @@ export default function RollNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onResizeNote, id, steps, onSetIsResizing]
+    [onResizeNote, id, steps]
   );
 
   const handleMouseDownContainer = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       onMouseDown(id, e.shiftKey);
-      onSetIsDragging(true);
 
       const startX = e.clientX;
       const startY = e.clientY;
@@ -94,7 +87,6 @@ export default function RollNote({
       };
 
       const handleMouseUp = () => {
-        onSetIsDragging(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -102,7 +94,7 @@ export default function RollNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onDragNote, id, left, top, unitHeight, onSetIsDragging]
+    [onDragNote, id, left, top, unitHeight]
   );
 
   return (

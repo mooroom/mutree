@@ -8,15 +8,15 @@
   border-style: solid;
 }
 
-.container[data-selected='true'] {
+/* .container[data-selected='true'] {
   filter: brightness(90%);
-}
+} */
 
 .head {
   position: absolute;
   top: 0;
   right: 0;
-  width: 8px;
+  width: 2px;
   height: 100%;
   cursor: col-resize;
 }

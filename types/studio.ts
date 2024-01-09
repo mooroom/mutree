@@ -9,6 +9,8 @@ import {
   SCALE_NAMES,
 } from '@/constants/studio';
 
+export type Layer = 'rhythm' | 'melody';
+
 export type PlayState = 'started' | 'stopped' | 'paused';
 export type Resolution = (typeof RESOLUTIONS)[number];
 
