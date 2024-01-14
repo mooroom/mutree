@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { rhythmKeysAtom, scrollLeftAtom } from '@/atoms/studio';
 import classes from './Lane.module.css';
 import useGridLinesRef from '@/hooks/studio/refs/useGridLinesRef';
-import { RHYTHM_UNIT_HEIGHT, RHYTHM_UNIT_NUM } from '@/constants/studio';
+import { RHYTHM_UNIT_HEIGHT, RHYTHM_UNIT_NUM, STEP_WIDTH } from '@/constants/studio';
 import RollNote from '../RollNote';
-import useRollNotes from '@/hooks/studio/useRollNotes';
+import useMutreeNotes from '@/hooks/studio/useMutreeNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
 
 export default function Lane() {
@@ -23,12 +23,13 @@ export default function Lane() {
 
   const {
     regionRef,
-    rollNotes,
+    mutreeNotes,
     handleDragNote,
     handleMouseDownRegion,
     handleMouseDownNote,
     handleResizeNote,
-  } = useRollNotes({
+    handleDeleteSelectedNotes,
+  } = useMutreeNotes({
     layer: 'rhythm',
     unitHeight: RHYTHM_UNIT_HEIGHT,
     audio: rhythmAudioMap[selectedRhythmAudioName.value],
@@ -38,6 +39,13 @@ export default function Lane() {
   const handlePlay = (pitch: number) => {
     rhythmAudioMap[selectedRhythmAudioName.value][pitch]?.playOnce();
   };
+
+  const calcRollNote = (x: number, y: number, length: number) => ({
+    left: x * STEP_WIDTH - scrollLeft,
+    top: y * RHYTHM_UNIT_HEIGHT,
+    width: length * STEP_WIDTH,
+    height: RHYTHM_UNIT_HEIGHT,
+  });
 
   return (
     <div className={classes.scrollable}>
@@ -57,19 +65,18 @@ export default function Lane() {
           <div className={classes.grid}>
             <canvas className={classes.gridLines} ref={gridLinesRef} />
             <div
-              className={classes.rollNotesRegion}
+              role="tab"
+              tabIndex={0}
+              className={classes.mutreeNotesRegion}
               ref={regionRef}
               onMouseDown={handleMouseDownRegion}
-              role="presentation"
+              onKeyDown={handleDeleteSelectedNotes}
             >
-              {rollNotes.map((v) => (
+              {mutreeNotes.map((v) => (
                 <RollNote
                   key={v.id}
                   id={v.id}
-                  left={v.left - scrollLeft}
-                  top={v.top}
-                  steps={v.steps}
-                  unitHeight={RHYTHM_UNIT_HEIGHT}
+                  {...calcRollNote(v.x, v.y, v.length)}
                   color={theme.colors.cyan[5]}
                   isSelected={v.isSelected}
                   onMouseDown={handleMouseDownNote}

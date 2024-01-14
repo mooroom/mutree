@@ -118,13 +118,13 @@ export const generateRhythmTriggeredAtom = atom<boolean>({
   default: false,
 });
 
-export const melodyRollNotesAtom = atom<IStudio.RollNote[]>({
-  key: 'melodyRollNotesAtom',
+export const melodyMutreeNotesAtom = atom<IStudio.MutreeNote[]>({
+  key: 'melodyMutreeNotesAtom',
   default: [],
 });
 
-export const rhythmRollNotesAtom = atom<IStudio.RollNote[]>({
-  key: 'rhythmRollNotesAtom',
+export const rhythmMutreeNotesAtom = atom<IStudio.MutreeNote[]>({
+  key: 'rhythmMutreeNotesAtom',
   default: [],
 });
 

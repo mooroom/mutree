@@ -4,18 +4,22 @@ import MutreeInstrument from './MutreeInstrument';
 
 type Nullable<T> = T | null;
 
-export default class MutreeEvent {
+export interface MutreeEventOptions {
+  instrument: Nullable<MutreeInstrument>;
+  time: Time;
+  duration: Time;
+  playOnCreate?: boolean;
+}
+
+export default class MutreeEvent<Options extends MutreeEventOptions = MutreeEventOptions> {
   private _event: ToneEvent;
   private _instrument: Nullable<MutreeInstrument>;
   private _time: Time;
   private _duration: Time;
 
-  constructor(
-    instrument: Nullable<MutreeInstrument>,
-    time: Time,
-    duration: Time,
-    playOnCreate = true
-  ) {
+  constructor(options: Options) {
+    const { instrument, time, duration, playOnCreate = true } = options;
+
     if (instrument === null) {
       throw new Error('invalid instrument');
     }
@@ -29,8 +33,8 @@ export default class MutreeEvent {
       this._instrument.playOnce();
     }
 
-    this._event.callback = (time) => {
-      this._instrument?.play(this._duration, time);
+    this._event.callback = (t) => {
+      this._instrument?.play(this._duration, t);
     };
     this._event.start(this._time);
   }
@@ -43,8 +47,8 @@ export default class MutreeEvent {
 
     this._event.dispose();
     this._event = new ToneEvent();
-    this._event.callback = (time) => {
-      this._instrument?.play(this._duration, time);
+    this._event.callback = (t) => {
+      this._instrument?.play(this._duration, t);
     };
     this._event.start(this._time);
 

@@ -8,7 +8,7 @@ import {
   TOTAL_WIDTH,
   SCALE_NAMES,
 } from '@/constants/studio';
-import { ScaleName, RollNote, MutreeKey } from '@/types/studio';
+import { ScaleName, MutreeNote, MutreeKey } from '@/types/studio';
 import basicRhythmIconsIndexJson from '@/public/studio/images/rhythmIcons/basic/_index.json';
 
 // time utils
@@ -73,11 +73,15 @@ export function getRhythmKeys(): MutreeKey[] {
   });
 }
 
-export const convertToINoteSequence = (rollNotes: RollNote[], totalQuantizedSteps: number) => {
-  const notes = rollNotes.map((note) => ({
-    pitch: note.pitch,
-    quantizedStartStep: note.startStep,
-    quantizedEndStep: note.endStep,
+export const convertToINoteSequence = (
+  mutreeNotes: MutreeNote[],
+  keys: MutreeKey[],
+  totalQuantizedSteps: number
+) => {
+  const notes = mutreeNotes.map((note) => ({
+    pitch: keys[note.y].pitch,
+    quantizedStartStep: note.x,
+    quantizedEndStep: note.x + note.length,
     program: 0,
   }));
 
@@ -93,12 +97,12 @@ export const convertToINoteSequence = (rollNotes: RollNote[], totalQuantizedStep
 };
 
 export const makeUrlFromLocalStorage = () => {
-  const melodyRollNotes = localStorage.getItem('melody-roll-notes');
-  const rhythmRollNotes = localStorage.getItem('rhythm-roll-notes');
+  const melodyMutreeNotes = localStorage.getItem('melody-roll-notes');
+  const rhythmMutreeNotes = localStorage.getItem('rhythm-roll-notes');
 
   // parse array data and encode
-  const encodedMelody = melodyRollNotes ? btoa(melodyRollNotes) : btoa('[]');
-  const encodedRhythm = rhythmRollNotes ? btoa(rhythmRollNotes) : btoa('[]');
+  const encodedMelody = melodyMutreeNotes ? btoa(melodyMutreeNotes) : btoa('[]');
+  const encodedRhythm = rhythmMutreeNotes ? btoa(rhythmMutreeNotes) : btoa('[]');
 
   // make url
   const url = `${window.location.origin}/studio?melody=${encodedMelody}&rhythm=${encodedRhythm}`;

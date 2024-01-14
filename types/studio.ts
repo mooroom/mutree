@@ -1,5 +1,5 @@
 import { Volume } from 'tone';
-import MutreeEvent from '@/classes/MutreeEvent';
+// import MutreeEvent from '@/classes/MutreeEvent';
 import MutreeInstrument from '@/classes/MutreeInstrument';
 import {
   DENOMINATORS,
@@ -37,18 +37,15 @@ export type MutreeAudioName = {
   value: string;
 };
 
-export interface RollNote {
+export interface MutreeNote {
   id: string;
-  left: number;
-  top: number;
-  steps: number;
-  event: MutreeEvent;
-  // for coconet
-  pitch: number;
-  startStep: number;
-  endStep: number;
+  x: number;
+  y: number;
+  length: number;
   isSelected: boolean;
   isAI?: boolean;
 }
+
+export type LocalStorageNote = Omit<MutreeNote, 'id' | 'isSelected' | 'isAI'>;
 
 export type MouseControl = keyof typeof MOUSE_CONTROL_OPTIONS;
