@@ -2,7 +2,6 @@ import * as mm from '@magenta/music';
 import React from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
-  bpmAtom,
   generateMelodyTriggeredAtom,
   generateRhythmTriggeredAtom,
   melodyMouseControlAtom,
@@ -13,7 +12,7 @@ import {
 import MutreeEvent, { MutreeEventOptions } from '@/classes/MutreeEvent';
 import { MOUSE_CONTROL_OPTIONS, NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
 import { MutreeAudio, MutreeKey, MutreeNote, Layer, LocalStorageNote } from '@/types/studio';
-import { convertToINoteSequence, getDurationOfSixteenth } from '@/utils/studio';
+import { convertToINoteSequence } from '@/utils/studio';
 
 interface Props {
   layer: Layer;
@@ -41,7 +40,6 @@ const CONSTANTS = {
 
 export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props) {
   const resolution = useRecoilValue(resolutionAtom);
-  const bpm = useRecoilValue(bpmAtom);
 
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const [generateNotesTriggered, setGenerateNotesTriggered] = useRecoilState(
@@ -49,9 +47,15 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
   );
 
   const [mutreeNotes, setMutreeNotes] = React.useState<MutreeNote[]>([]);
+  const [clipboard, setClipboard] = React.useState<Omit<MutreeNote, 'id'>[]>([]);
   const [mutreeEvents, setMutreeEvents] = React.useState<MutreeEvent[]>([]);
   const [isRegionLoading, setIsRegionLoading] = React.useState(false);
   const [isIntializedByUrl, setIsIntializedByUrl] = React.useState(false);
+
+  // const [isAltKeyPressed, setIsAltKeyPressed] = React.useState(false);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const ifAltKeyPressedRef = React.useRef(false);
+  const isDragCopyRef = React.useRef(false);
 
   const regionRef = React.useRef<HTMLDivElement>(null);
   const noteIdRef = React.useRef(0);
@@ -114,6 +118,35 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
   };
 
   const changeNotePosition = (dx: number, dy: number) => {
+    if (ifAltKeyPressedRef.current && !isDragCopyRef.current) {
+      setMutreeNotes((prev) => unSelectNotes(prev));
+      setClipboard(() => {
+        const newClipboard = mutreeNotes
+          .filter((note) => note.isSelected)
+          .map(({ id, ...rest }) => ({
+            ...rest,
+            x: rest.x + dx,
+            y: rest.y + dy,
+          }));
+
+        return newClipboard;
+      });
+
+      isDragCopyRef.current = true;
+      return;
+    }
+
+    if (isDragCopyRef.current) {
+      setClipboard((prevClipboard) =>
+        prevClipboard.map((note) => ({
+          ...note,
+          x: note.x + dx,
+          y: note.y + dy,
+        }))
+      );
+      return;
+    }
+
     setMutreeNotes((prev) =>
       prev.map((note) => {
         if (note.isSelected) {
@@ -203,6 +236,49 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
     changeNotePosition(dx, dy);
   };
 
+  const handleSetIsDragging = (value: boolean) => {
+    setIsDragging(value);
+  };
+
+  React.useEffect(() => {
+    // detect alt key press
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        ifAltKeyPressedRef.current = true;
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        ifAltKeyPressedRef.current = false;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [mutreeNotes]);
+
+  React.useEffect(() => {
+    // release all notes when mouse up
+    if (!isDragging && clipboard.length > 0) {
+      const newNotes = clipboard.map((note) => ({
+        ...note,
+        id: getNoteId(),
+        isSelected: true,
+      }));
+
+      setMutreeNotes((prev) => unSelectNotes(prev).concat(newNotes));
+      setClipboard([]);
+
+      isDragCopyRef.current = false;
+    }
+  }, [isDragging, clipboard]);
+
   // watch mutreeNotes -> mutreeEvents
   React.useEffect(() => {
     const newEventOptionsArray: MutreeEventOptions[] = mutreeNotes.map((note) => {
@@ -211,15 +287,15 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
 
       return {
         instrument: audio[pitch],
-        time: x * getDurationOfSixteenth(bpm),
-        duration: length * getDurationOfSixteenth(bpm),
+        startStep: x,
+        steps: length,
         playOnCreate: false,
       };
     });
 
     mutreeEvents.forEach((e) => e.delete());
     setMutreeEvents(newEventOptionsArray.map((options) => new MutreeEvent(options)));
-  }, [mutreeNotes, audio, keys, bpm]);
+  }, [mutreeNotes, keys, audio]);
 
   React.useEffect(() => {
     // 여기는 rhythm 케이스에서 추후에 수정해야함
@@ -276,15 +352,7 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
       .finally(() => {
         setGenerateNotesTriggered(false);
       });
-  }, [
-    generateNotesTriggered,
-    mutreeNotes,
-    keys,
-    audio,
-    bpm,
-    setGenerateNotesTriggered,
-    setScrollLeft,
-  ]);
+  }, [generateNotesTriggered, mutreeNotes, keys, audio, setGenerateNotesTriggered, setScrollLeft]);
 
   React.useEffect(() => {
     if (!isIntializedByUrl) return;
@@ -327,12 +395,14 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
 
   return {
     mutreeNotes,
+    clipboardNotes: clipboard,
     regionRef,
     isRegionLoading,
     handleMouseDownRegion,
     handleMouseDownNote,
     handleResizeNote,
     handleDragNote,
+    handleSetIsDragging,
     handleDeleteSelectedNotes,
   };
 }

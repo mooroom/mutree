@@ -15,6 +15,7 @@ interface Props {
   onMouseDown: (id: string, shiftKeyPressed: boolean) => void;
   onResizeNote: (dLength: number) => void;
   onDragNote: (dx: number, dy: number) => void;
+  onSetIsDragging: (isDragging: boolean) => void;
 }
 
 export default function RollNote({
@@ -29,6 +30,7 @@ export default function RollNote({
   onMouseDown,
   onResizeNote,
   onDragNote,
+  onSetIsDragging,
 }: Props) {
   const colorStyles: React.CSSProperties = {
     backgroundColor: isSelected ? lighten(color, 0.3) : color,
@@ -77,6 +79,8 @@ export default function RollNote({
       let pivotY = 0;
 
       const handleMouseMove = (event: MouseEvent) => {
+        onSetIsDragging(true);
+
         const diffX = event.clientX - startX;
         const diffY = event.clientY - startY;
 
@@ -91,6 +95,7 @@ export default function RollNote({
       };
 
       const handleMouseUp = () => {
+        onSetIsDragging(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };

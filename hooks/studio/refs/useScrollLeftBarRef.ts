@@ -1,19 +1,18 @@
+import React from 'react';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import * as Tone from 'tone';
 import {
-  bpmAtom,
   isPlayheadInvisibleAtom,
   isScrollingAtom,
   playStateAtom,
   scrollLeftAtom,
 } from '@/atoms/studio';
-import { getAbsoluteScrollLeftPosition } from '@/utils/studio';
-import React from 'react';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { STEP_WIDTH } from '@/constants/studio';
 
 export default function useScrollLeftBar() {
   const [scrolLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const setIsScrolling = useSetRecoilState(isScrollingAtom);
   const playState = useRecoilValue(playStateAtom);
-  const bpm = useRecoilValue(bpmAtom);
   const isPlayheadInvisible = useRecoilValue(isPlayheadInvisibleAtom);
 
   const scrollLeftBarRef = React.useRef<HTMLDivElement>(null);
@@ -28,9 +27,7 @@ export default function useScrollLeftBar() {
     };
 
     scrollLeftBar.addEventListener('scroll', handleScroll);
-    return () => {
-      scrollLeftBar.removeEventListener('scroll', handleScroll);
-    };
+    return () => scrollLeftBar.removeEventListener('scroll', handleScroll);
   }, [setScrollLeft]);
 
   // set isScrolling on mouse down/up
@@ -44,7 +41,8 @@ export default function useScrollLeftBar() {
     const handleMouseUp = () => {
       if (playState !== 'started' || !isPlayheadInvisible) return;
 
-      scrollLeftBar.scrollLeft = getAbsoluteScrollLeftPosition(bpm);
+      scrollLeftBar.scrollLeft =
+        (STEP_WIDTH / Tone.Time('16n').toSeconds()) * Tone.Transport.seconds;
       setIsScrolling(false);
     };
 
@@ -55,7 +53,7 @@ export default function useScrollLeftBar() {
       scrollLeftBar.removeEventListener('mousedown', handleMouseDown);
       scrollLeftBar.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [setIsScrolling, playState, bpm, isPlayheadInvisible]);
+  }, [setIsScrolling, playState, isPlayheadInvisible]);
 
   // observe scrollLeft
   React.useEffect(() => {

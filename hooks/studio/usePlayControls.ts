@@ -1,8 +1,8 @@
 import React from 'react';
-import { isToneInitializedAtom, playStateAtom, scrollLeftAtom, timeAtom } from '@/atoms/studio';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { formatTimer } from '@/utils/studio';
 import * as Tone from 'tone';
+import { isToneInitializedAtom, playStateAtom, scrollLeftAtom, timeAtom } from '@/atoms/studio';
+import { formatTimer } from '@/utils/studio';
 
 export default function usePlayControls() {
   const [isToneInitialized, setIsToneInitialized] = useRecoilState(isToneInitializedAtom);
@@ -30,9 +30,7 @@ export default function usePlayControls() {
     };
   }, [playState, time, setTime]);
 
-  const formattedTime = React.useMemo(() => {
-    return formatTimer(time);
-  }, [time]);
+  const formattedTime = React.useMemo(() => formatTimer(time), [time]);
 
   const togglePlay = React.useCallback(() => {
     if (!isToneInitialized) {

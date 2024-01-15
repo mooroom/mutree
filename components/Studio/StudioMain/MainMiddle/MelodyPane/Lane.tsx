@@ -7,6 +7,7 @@ import { MELODY_UNIT_HEIGHT, MELODY_UNIT_NUM, STEP_WIDTH } from '@/constants/stu
 import RollNote from '../RollNote';
 import useMutreeNotes from '@/hooks/studio/useMutreeNotes';
 import { useMutreeAudioContext } from '@/components/Studio/MutreeAudioProvider';
+import RollNoteGhost from '../RollNoteGhost';
 
 export default function Lane() {
   const scrollLeft = useRecoilValue(scrollLeftAtom);
@@ -24,12 +25,14 @@ export default function Lane() {
   const {
     regionRef,
     mutreeNotes,
+    clipboardNotes,
     isRegionLoading,
     handleDragNote,
     handleMouseDownRegion,
     handleMouseDownNote,
     handleResizeNote,
     handleDeleteSelectedNotes,
+    handleSetIsDragging,
   } = useMutreeNotes({
     layer: 'melody',
     unitHeight: MELODY_UNIT_HEIGHT,
@@ -84,6 +87,14 @@ export default function Lane() {
                   onMouseDown={handleMouseDownNote}
                   onResizeNote={handleResizeNote}
                   onDragNote={handleDragNote}
+                  onSetIsDragging={handleSetIsDragging}
+                />
+              ))}
+              {clipboardNotes.map((v, index) => (
+                <RollNoteGhost
+                  key={index}
+                  {...calcRollNote(v.x, v.y, v.length)}
+                  color={theme.colors.teal[5]}
                 />
               ))}
             </div>

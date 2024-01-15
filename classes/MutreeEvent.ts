@@ -1,80 +1,81 @@
-import { ToneEvent } from 'tone';
-import type { Time } from 'tone/build/esm/core/type/Units';
+import * as Tone from 'tone';
 import MutreeInstrument from './MutreeInstrument';
 
 type Nullable<T> = T | null;
 
 export interface MutreeEventOptions {
   instrument: Nullable<MutreeInstrument>;
-  time: Time;
-  duration: Time;
+  startStep: number;
+  steps: number;
   playOnCreate?: boolean;
 }
 
+const BASIC_TIME = '16n';
+
 export default class MutreeEvent<Options extends MutreeEventOptions = MutreeEventOptions> {
-  private _event: ToneEvent;
+  private _event: Tone.ToneEvent;
   private _instrument: Nullable<MutreeInstrument>;
-  private _time: Time;
-  private _duration: Time;
+  private _startStep: number;
+  private _steps: number;
 
   constructor(options: Options) {
-    const { instrument, time, duration, playOnCreate = true } = options;
+    const { instrument, startStep, steps, playOnCreate = false } = options;
 
     if (instrument === null) {
       throw new Error('invalid instrument');
     }
 
-    this._event = new ToneEvent();
+    this._event = new Tone.ToneEvent();
     this._instrument = instrument;
-    this._time = time;
-    this._duration = duration;
+    this._startStep = startStep;
+    this._steps = steps;
 
     if (playOnCreate) {
       this._instrument.playOnce();
     }
 
     this._event.callback = (t) => {
-      this._instrument?.play(this._duration, t);
+      this._instrument?.play(this._steps, t);
     };
-    this._event.start(this._time);
+    this._event.start(this._startStep * Tone.Time(BASIC_TIME).toSeconds());
   }
 
   // Update the event with new instrument, time and duration
-  update(instrument: Nullable<MutreeInstrument>, time: Time, duration: Time) {
-    this._instrument = instrument;
-    this._time = time;
-    this._duration = duration;
+  // update(instrument: Nullable<MutreeInstrument>, time: Time, duration: Time) {
+  //   this._instrument = instrument;
+  //   this._time = time;
+  //   this._duration = duration;
 
-    this._event.dispose();
-    this._event = new ToneEvent();
-    this._event.callback = (t) => {
-      this._instrument?.play(this._duration, t);
-    };
-    this._event.start(this._time);
+  //   this._event.dispose();
+  //   this._event = new Tone.ToneEvent();
+  //   this._event.callback = (t) => {
+  //     this._instrument?.play(this._duration, t);
+  //   };
+  //   this._event.start(this._time);
 
-    return this;
-  }
+  //   return this;
+  // }
 
   // Update the event with new instrument
-  updateInstrument(instrument: Nullable<MutreeInstrument>) {
-    this.update(instrument, this._time, this._duration);
+  // updateInstrument(instrument: Nullable<MutreeInstrument>) {
+  //   this.update(instrument, this._time, this._duration);
 
-    return this;
-  }
+  //   return this;
+  // }
 
   // Update the instrument or the time of the event
-  updateInstrumentOrTime(instrument: Nullable<MutreeInstrument>, time: Time) {
-    this.update(instrument, time, this._duration);
+  // updateInstrumentOrTime(instrument: Nullable<MutreeInstrument>, time: Time) {
+  //   this.update(instrument, time, this._duration);
 
-    return this;
-  }
+  //   return this;
+  // }
 
   // Update the duration of the event
-  updateDuration(duration: Time) {
-    this.update(this._instrument, this._time, duration);
+  // updateDuration(duration: Time) {
+  //   this.update(this._instrument, this._time, duration);
 
-    return this;
-  }
+  //   return this;
+  // }
 
   // Delete the event
   delete() {
@@ -94,19 +95,19 @@ export default class MutreeEvent<Options extends MutreeEventOptions = MutreeEven
     this._instrument = instrument;
   }
 
-  get time() {
-    return this._time;
-  }
+  // get time() {
+  //   return this._time;
+  // }
 
-  set time(time: Time) {
-    this._time = time;
-  }
+  // set time(time: Time) {
+  //   this._time = time;
+  // }
 
-  get duration() {
-    return this._duration;
-  }
+  // get duration() {
+  //   return this._duration;
+  // }
 
-  set duration(duration: Time) {
-    this._duration = duration;
-  }
+  // set duration(duration: Time) {
+  //   this._duration = duration;
+  // }
 }

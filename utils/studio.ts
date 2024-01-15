@@ -1,13 +1,7 @@
 import * as Tone from 'tone';
 import { Scale } from 'tonal';
 import * as mm from '@magenta/music';
-import {
-  KO_NOTE_NAME,
-  ROOT_NOTES,
-  TOTAL_STEPS,
-  TOTAL_WIDTH,
-  SCALE_NAMES,
-} from '@/constants/studio';
+import { KO_NOTE_NAME, ROOT_NOTES, SCALE_NAMES } from '@/constants/studio';
 import { ScaleName, MutreeNote, MutreeKey } from '@/types/studio';
 import basicRhythmIconsIndexJson from '@/public/studio/images/rhythmIcons/basic/_index.json';
 
@@ -21,17 +15,6 @@ export function formatTimer(time: number) {
   const secondsString = seconds.toString().padStart(2, '0');
 
   return `${minutesString}:${secondsString}.${milliseconds}`;
-}
-
-export function getDurationOfSixteenth(bpm: number) {
-  return 1 / ((bpm / 60) * 4);
-}
-
-export function getAbsoluteScrollLeftPosition(bpm: number) {
-  const currentTime = Tone.Transport.seconds;
-  const totalTime = TOTAL_STEPS * getDurationOfSixteenth(bpm);
-
-  return (currentTime / totalTime) * TOTAL_WIDTH;
 }
 
 // scale utils

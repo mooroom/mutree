@@ -1,11 +1,13 @@
 import { Text, Grid, Slider, Flex } from '@mantine/core';
-import { useRecoilState } from 'recoil';
-import { bpmAtom } from '@/atoms/studio';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { bpmAtom, playStateAtom } from '@/atoms/studio';
 
 export default function BpmControl() {
   const [bpm, setBpm] = useRecoilState(bpmAtom);
+  const setPlayState = useSetRecoilState(playStateAtom);
 
   const handleChangeBpm = (value: string | number) => {
+    setPlayState('paused');
     setBpm(Number(value));
   };
 
