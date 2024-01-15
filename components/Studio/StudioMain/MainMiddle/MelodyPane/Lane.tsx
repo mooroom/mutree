@@ -17,7 +17,7 @@ export default function Lane() {
   const gridLinesRef = useGridLinesRef({
     numUnits: MELODY_UNIT_NUM,
     unitHeight: MELODY_UNIT_HEIGHT,
-    // highlightColor: theme.colors.teal[3],
+    highlightColor: theme.colors.teal[3],
   });
 
   const { melodyAudioMap, selectedMelodyAudioName } = useMutreeAudioContext();

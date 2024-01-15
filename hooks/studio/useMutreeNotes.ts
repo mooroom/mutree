@@ -240,8 +240,8 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
     setIsDragging(value);
   };
 
+  // detect alt key press
   React.useEffect(() => {
-    // detect alt key press
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Alt') {
         ifAltKeyPressedRef.current = true;
@@ -263,8 +263,8 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
     };
   }, [mutreeNotes]);
 
+  // release all notes when mouse up
   React.useEffect(() => {
-    // release all notes when mouse up
     if (!isDragging && clipboard.length > 0) {
       const newNotes = clipboard.map((note) => ({
         ...note,
