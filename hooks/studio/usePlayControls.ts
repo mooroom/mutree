@@ -30,8 +30,6 @@ export default function usePlayControls() {
     };
   }, [playState, time, setTime]);
 
-  const formattedTime = React.useMemo(() => formatTimer(time), [time]);
-
   const togglePlay = React.useCallback(() => {
     if (!isToneInitialized) {
       Tone.start();
@@ -52,7 +50,7 @@ export default function usePlayControls() {
   }, [setPlayState, setTime, setScrollLeft]);
 
   return {
-    formattedTime,
+    formattedTime: formatTimer(time),
     playState,
     togglePlay,
     stop,

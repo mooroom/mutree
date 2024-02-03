@@ -1,6 +1,6 @@
+import { useRecoilValue } from 'recoil';
 import { STEP_WIDTH } from '@/constants/studio';
 import useScrollLeftCanvasRef from './useScrollLeftCanvasRef';
-import { useRecoilValue } from 'recoil';
 import { denomAtom, numerAtom } from '@/atoms/studio';
 
 export default function useBeatRulerAxisRef() {
@@ -12,7 +12,7 @@ export default function useBeatRulerAxisRef() {
       const gap = STEP_WIDTH;
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
-      for (let i = 0; i < numLines; i++) {
+      for (let i = 0; i < numLines; i += 1) {
         const x = i * gap - (scrollLeft % gap);
 
         const mark = Math.floor((i * gap + scrollLeft) / gap);

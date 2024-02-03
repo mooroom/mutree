@@ -36,7 +36,7 @@
 .compositionHeader {
   position: relative;
   flex: 1;
-  background-color: var(--mantine-color-gray-5);
+  background-color: var(--mantine-color-gray-4);
 }
 
 .timelineControls {
@@ -61,8 +61,19 @@
 
 /* not yet developed */
 .cycleMarker {
+  /* margin-left: 100px;
+  width: 200px; */
   height: 20px;
+  border-radius: 4px;
   background-color: var(--mantine-color-yellow-4);
+  border: 1px solid var(--mantine-color-yellow-5);
+  /* background-color: var(--mantine-color-gray-4);
+  border: 1px solid var(--mantine-color-gray-5); */
+}
+
+.cycleMarker .inactive {
+  background-color: var(--mantine-color-gray-2);
+  border-color: var(--mantine-color-gray-3);
 }
 
 .playhead {

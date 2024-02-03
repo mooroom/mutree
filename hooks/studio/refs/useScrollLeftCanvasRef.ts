@@ -1,6 +1,6 @@
-import { scrollLeftAtom } from '@/atoms/studio';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
+import { scrollLeftAtom } from '@/atoms/studio';
 
 interface Props {
   onDraw: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollLeft: number) => void;
@@ -42,6 +42,7 @@ export default function useScrollLeftCanvasRef({ onDraw }: Props) {
     };
 
     window.addEventListener('resize', handleResize);
+    // eslint-disable-next-line consistent-return
     return () => window.removeEventListener('resize', handleResize);
   }, [scrollLeft, onDraw]);
 

@@ -23,10 +23,12 @@ export default function useScrollLeftBar() {
     if (!scrollLeftBar) return;
 
     const handleScroll = () => {
+      console.log('scrollLeftBar.scrollLeft', scrollLeftBar.scrollLeft);
       setScrollLeft(scrollLeftBar.scrollLeft);
     };
 
     scrollLeftBar.addEventListener('scroll', handleScroll);
+    // eslint-disable-next-line consistent-return
     return () => scrollLeftBar.removeEventListener('scroll', handleScroll);
   }, [setScrollLeft]);
 
@@ -49,11 +51,12 @@ export default function useScrollLeftBar() {
     scrollLeftBar.addEventListener('mousedown', handleMouseDown);
     scrollLeftBar.addEventListener('mouseup', handleMouseUp);
 
+    // eslint-disable-next-line consistent-return
     return () => {
       scrollLeftBar.removeEventListener('mousedown', handleMouseDown);
       scrollLeftBar.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [setIsScrolling, playState, isPlayheadInvisible]);
+  }, [playState, isPlayheadInvisible, setIsScrolling]);
 
   // observe scrollLeft
   React.useEffect(() => {

@@ -1,16 +1,24 @@
 import { useDisclosure } from '@mantine/hooks';
 import { ActionIcon, Dialog, Divider, Text } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
+import { useRecoilState } from 'recoil';
 import DenomNumerControl from './DenomNumerControl';
 import BpmControl from './BpmControl';
 import ResolutionControl from './ResolutionControl';
+import { playStateAtom } from '@/atoms/studio';
 
 export default function Controls() {
+  const [playState, setPlayState] = useRecoilState(playStateAtom);
   const [open, { toggle, close }] = useDisclosure(false);
+
+  const handleOpen = () => {
+    if (playState !== 'stopped') setPlayState('stopped');
+    toggle();
+  };
 
   return (
     <>
-      <ActionIcon variant="outline" radius="xl" color="gray.6" size="xl" onClick={toggle}>
+      <ActionIcon variant="outline" radius="xl" color="gray.6" size="xl" onClick={handleOpen}>
         <IconSettings />
       </ActionIcon>
 

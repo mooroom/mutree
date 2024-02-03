@@ -7,29 +7,46 @@ import {
   playStateAtom,
   scrollLeftAtom,
   timeAtom,
+  isToneInitializedAtom,
 } from '@/atoms/studio';
 import { STEP_WIDTH } from '@/constants/studio';
 
 export default function useTimeLine() {
+  const [isToneInitialized, setIsToneInitialized] = useRecoilState(isToneInitializedAtom);
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
-  const [time, setTime] = useRecoilState(timeAtom);
+  const [playState, setPlayState] = useRecoilState(playStateAtom);
+
   const isScrolling = useRecoilValue(isScrollingAtom);
-  const playState = useRecoilValue(playStateAtom);
   const setIsPlayheadInvisible = useSetRecoilState(isPlayheadInvisibleAtom);
+  const setTime = useSetRecoilState(timeAtom);
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
   const playheadRef = React.useRef<HTMLDivElement>(null);
 
-  const jumpToTime = (timelinePosition: number) => {
-    const jumpTime = timelinePosition * Tone.Time('16n').toSeconds();
-    Tone.Transport.seconds = jumpTime;
+  const jumpToTime = React.useCallback(
+    (clickedPosition: number) => {
+      const snapClickedPosition = Math.floor(clickedPosition / STEP_WIDTH) * STEP_WIDTH;
+      playheadRef.current!.style.transform = `translateX(${snapClickedPosition}px)`;
 
-    setTime(jumpTime);
-  };
+      const absolutePosition = snapClickedPosition + scrollLeft;
+      const timelinePosition = absolutePosition / STEP_WIDTH;
+
+      const jumpTime = timelinePosition * Tone.Time('16n').toSeconds();
+      Tone.Transport.seconds = jumpTime;
+
+      if (!isToneInitialized) {
+        Tone.start();
+        setIsToneInitialized(true);
+      }
+      setPlayState('paused');
+      setTime(jumpTime);
+    },
+    [scrollLeft, setTime]
+  );
 
   const animationRef = React.useRef<number | null>(null);
 
-  const animate = React.useCallback(() => {
+  const animate = () => {
     const beatRuler = beatRulerRef.current;
     const playhead = playheadRef.current;
     if (!beatRuler || !playhead) return;
@@ -59,17 +76,22 @@ export default function useTimeLine() {
     }
 
     animationRef.current = requestAnimationFrame(animate);
-  }, [isScrolling, playState, scrollLeft, setIsPlayheadInvisible, setScrollLeft]);
+  };
 
   React.useEffect(() => {
-    console.log('useTimeLine effect');
-    animate();
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+    if (playState === 'started') {
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(animationRef.current!);
+      if (playState === 'stopped') {
+        playheadRef.current!.style.transform = 'translateX(0)';
       }
+    }
+
+    return () => {
+      cancelAnimationFrame(animationRef.current!);
     };
-  }, [animate]);
+  }, [animate, playState]);
 
   return {
     beatRulerRef,
