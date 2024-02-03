@@ -21,6 +21,8 @@ export default function usePlayControls() {
       Tone.Transport.pause();
     } else if (playState === 'stopped') {
       Tone.Transport.stop();
+      setTime(0);
+      setScrollLeft(0);
     }
 
     return () => {
@@ -43,11 +45,9 @@ export default function usePlayControls() {
     }
   }, [playState, setPlayState, isToneInitialized, setIsToneInitialized]);
 
-  const stop = React.useCallback(() => {
+  const stop = () => {
     setPlayState('stopped');
-    setTime(0);
-    setScrollLeft(0);
-  }, [setPlayState, setTime, setScrollLeft]);
+  };
 
   return {
     formattedTime: formatTimer(time),
