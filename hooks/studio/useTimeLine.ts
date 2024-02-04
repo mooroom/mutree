@@ -16,8 +16,8 @@ export default function useTimeLine() {
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftAtom);
   const [playState, setPlayState] = useRecoilState(playStateAtom);
 
-  const isScrolling = useRecoilValue(isScrollingAtom);
   const setIsPlayheadInvisible = useSetRecoilState(isPlayheadInvisibleAtom);
+  const isScrolling = useRecoilValue(isScrollingAtom);
   const setTime = useSetRecoilState(timeAtom);
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
@@ -26,6 +26,7 @@ export default function useTimeLine() {
   const jumpToTime = React.useCallback(
     (clickedPosition: number) => {
       const snapClickedPosition = Math.floor(clickedPosition / STEP_WIDTH) * STEP_WIDTH;
+      playheadRef.current!.style.display = 'block';
       playheadRef.current!.style.transform = `translateX(${snapClickedPosition}px)`;
 
       const absolutePosition = snapClickedPosition + scrollLeft;
@@ -44,9 +45,10 @@ export default function useTimeLine() {
     [scrollLeft, setTime]
   );
 
-  const animationRef = React.useRef<number | null>(null);
+  // animate playhead when started
+  const animateOnMoveRef = React.useRef<number | null>(null);
 
-  const animate = () => {
+  const animateOnMove = () => {
     const beatRuler = beatRulerRef.current;
     const playhead = playheadRef.current;
     if (!beatRuler || !playhead) return;
@@ -55,8 +57,9 @@ export default function useTimeLine() {
     const absoluteScrollLeftPosition = playheadVelocity * Tone.Transport.seconds;
 
     const relativeScrollLeft = absoluteScrollLeftPosition - scrollLeft;
+    const isPlayheadOutside = relativeScrollLeft < 0 || relativeScrollLeft > beatRuler.clientWidth;
 
-    if (relativeScrollLeft < 0 || relativeScrollLeft > beatRuler.clientWidth) {
+    if (isPlayheadOutside) {
       setIsPlayheadInvisible(true);
       playhead.style.display = 'none';
     } else {
@@ -75,23 +78,62 @@ export default function useTimeLine() {
       setScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
     }
 
-    animationRef.current = requestAnimationFrame(animate);
+    animateOnMoveRef.current = requestAnimationFrame(animateOnMove);
   };
 
   React.useEffect(() => {
     if (playState === 'started') {
-      animationRef.current = requestAnimationFrame(animate);
+      animateOnMoveRef.current = requestAnimationFrame(animateOnMove);
     } else {
-      cancelAnimationFrame(animationRef.current!);
+      cancelAnimationFrame(animateOnMoveRef.current!);
       if (playState === 'stopped') {
         playheadRef.current!.style.transform = 'translateX(0)';
       }
     }
 
     return () => {
-      cancelAnimationFrame(animationRef.current!);
+      cancelAnimationFrame(animateOnMoveRef.current!);
     };
-  }, [animate, playState]);
+  }, [animateOnMove, playState]);
+
+  // animate playhead when not started
+  const animateOnStaticRef = React.useRef<number | null>(null);
+
+  const animateOnStatic = () => {
+    const beatRuler = beatRulerRef.current;
+    const playhead = playheadRef.current;
+    if (!beatRuler || !playhead) return;
+
+    const playheadVelocity = STEP_WIDTH / Tone.Time('16n').toSeconds();
+    const absoluteScrollLeftPosition = playheadVelocity * Tone.Transport.seconds;
+
+    const relativeScrollLeft = absoluteScrollLeftPosition - scrollLeft;
+    const isPlayheadOutside = relativeScrollLeft < 0 || relativeScrollLeft > beatRuler.clientWidth;
+
+    if (isPlayheadOutside) {
+      setIsPlayheadInvisible(true);
+      playhead.style.display = 'none';
+    } else {
+      setIsPlayheadInvisible(false);
+      playhead.style.display = 'block';
+    }
+
+    playhead.style.transform = `translateX(${relativeScrollLeft}px)`;
+
+    animateOnStaticRef.current = requestAnimationFrame(animateOnStatic);
+  };
+
+  React.useEffect(() => {
+    if (playState !== 'started' && isScrolling) {
+      animateOnStaticRef.current = requestAnimationFrame(animateOnStatic);
+    } else if (playState !== 'started' && !isScrolling) {
+      cancelAnimationFrame(animateOnStaticRef.current!);
+    }
+
+    return () => {
+      cancelAnimationFrame(animateOnStaticRef.current!);
+    };
+  }, [animateOnStatic, playState]);
 
   return {
     beatRulerRef,

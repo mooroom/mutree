@@ -23,7 +23,6 @@ export default function useScrollLeftBar() {
     if (!scrollLeftBar) return;
 
     const handleScroll = () => {
-      console.log('scrollLeftBar.scrollLeft', scrollLeftBar.scrollLeft);
       setScrollLeft(scrollLeftBar.scrollLeft);
     };
 
@@ -41,7 +40,10 @@ export default function useScrollLeftBar() {
       setIsScrolling(true);
     };
     const handleMouseUp = () => {
-      if (playState !== 'started' || !isPlayheadInvisible) return;
+      if (playState !== 'started' || !isPlayheadInvisible) {
+        setIsScrolling(false);
+        return;
+      }
 
       scrollLeftBar.scrollLeft =
         (STEP_WIDTH / Tone.Time('16n').toSeconds()) * Tone.Transport.seconds;

@@ -36,6 +36,7 @@ export default function usePlayControls() {
     if (!isToneInitialized) {
       Tone.start();
       setIsToneInitialized(true);
+      setScrollLeft(0);
     }
 
     if (playState === 'started') {
