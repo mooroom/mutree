@@ -3,7 +3,8 @@ import { Scale } from 'tonal';
 import * as mm from '@magenta/music';
 import { KO_NOTE_NAME, ROOT_NOTES, SCALE_NAMES } from '@/constants/studio';
 import { ScaleName, MutreeNote, MutreeKey } from '@/types/studio';
-import basicRhythmIconsIndexJson from '@/public/studio/images/rhythmIcons/basic/_index.json';
+// import basicRhythmIconsIndexJson from '@/public/studio/images/rhythmIcons/basic/_index.json';
+import drumRhythmIconsIndexJson from '@/public/studio/images/rhythmIcons/drum/_index.json';
 
 // time utils
 export function formatTimer(time: number) {
@@ -41,7 +42,8 @@ export function getRhythmKeys(): MutreeKey[] {
 
   return notes.map((value: string) => {
     const pitch = Tone.Frequency(value).toMidi();
-    const parsedJson = basicRhythmIconsIndexJson as {
+    // fixme: 이 부분은 api 연동하면서 바꿔야 함
+    const parsedJson = drumRhythmIconsIndexJson as {
       [key: string]: { path: string; name: { [key: string]: string } };
     };
 

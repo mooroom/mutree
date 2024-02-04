@@ -2,50 +2,50 @@
   "C0": {
     "path": "/studio/images/rhythmIcons/basic/kick.svg",
     "name": {
-      "ko": "핸드드럼",
-      "en": "HandDrum"
+      "ko": "킥",
+      "en": "Kick"
     }
   },
   "D0": {
     "path": "/studio/images/rhythmIcons/basic/floorTom.svg",
     "name": {
-      "ko": "탬버린1(가죽부분치는소리)",
-      "en": "tambourine1"
+      "ko": "탐탐",
+      "en": "tomtom"
     }
   },
   "E0": {
     "path": "/studio/images/rhythmIcons/basic/snare.svg",
     "name": {
-      "ko": "탬버린2(흔드는소리)",
-      "en": "tambourine2"
+      "ko": "스네어",
+      "en": "Snare"
     }
   },
   "F0": {
     "path": "/studio/images/rhythmIcons/basic/midTom.svg",
     "name": {
-      "ko": "트라이앵글",
-      "en": "triangle"
+      "ko": "하이햇",
+      "en": "closed hihat"
     }
   },
   "G0": {
     "path": "/studio/images/rhythmIcons/basic/closedHat.svg",
     "name": {
-      "ko": "우드블록",
-      "en": "woodblock"
+      "ko": "클랩(박수)",
+      "en": "clap"
     }
   },
   "A0": {
     "path": "/studio/images/rhythmIcons/basic/openHat.svg",
     "name": {
-      "ko": "심벌",
-      "en": "cymbal"
+      "ko": "스냅",
+      "en": "snap"
     }
   },
   "B0": {
     "path": "/studio/images/rhythmIcons/basic/crash.svg",
     "name": {
-      "ko": "셰이커",
-      "en": "shaker"
+      "ko": "크래쉬",
+      "en": "crash short"
     }
   }
 }

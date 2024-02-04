@@ -2,8 +2,8 @@
   "baseUrl": "/studio/audio/rhythm/",
   "audioList": [
     {
-      "value": "basic",
-      "label": "기본"
+      "value": "drum",
+      "label": "드럼"
     }
   ]
 }
