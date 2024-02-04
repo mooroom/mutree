@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { ActionIcon, Dialog, Divider, Text } from '@mantine/core';
+import { ActionIcon, Divider, Modal, Space } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
 import { useRecoilState } from 'recoil';
 import DenomNumerControl from './DenomNumerControl';
@@ -22,17 +22,15 @@ export default function Controls() {
         <IconSettings />
       </ActionIcon>
 
-      <Dialog opened={open} withCloseButton onClose={close} radius="mediun">
-        <Text size="sm" mb="lg" fw={500}>
-          음악 설정
-        </Text>
-
+      <Modal opened={open} onClose={close} radius="medium" centered title="음악설정">
+        <Space h="lg" />
         <ResolutionControl />
-        <Divider my="lg" />
+        <Divider my="xl" />
         <DenomNumerControl />
-        <Divider my="lg" />
+        <Divider my="xl" />
         <BpmControl />
-      </Dialog>
+        <Space h="lg" />
+      </Modal>
     </>
   );
 }

@@ -51,7 +51,7 @@ export default function ResolutionControl() {
   };
 
   return (
-    <Combobox store={combobox} onOptionSubmit={handleOptionSubmit} position="top">
+    <Combobox store={combobox} onOptionSubmit={handleOptionSubmit}>
       <Grid align="center">
         <Grid.Col span={3}>
           <Text size="xs" c="gray.7">
