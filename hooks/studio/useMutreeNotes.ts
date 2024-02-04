@@ -11,7 +11,7 @@ import {
 } from '@/atoms/studio';
 import MutreeEvent, { MutreeEventOptions } from '@/classes/MutreeEvent';
 import { MOUSE_CONTROL_OPTIONS, NOTE_WIDTH, STEP_WIDTH } from '@/constants/studio';
-import { MutreeAudio, MutreeKey, MutreeNote, Layer, LocalStorageNote } from '@/types/studio';
+import { MutreeAudio, MutreeKey, MutreeNote, Layer } from '@/types/studio';
 import { convertToINoteSequence } from '@/utils/studio';
 
 interface Props {
@@ -357,13 +357,10 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
   React.useEffect(() => {
     if (!isIntializedByUrl) return;
 
-    const data: LocalStorageNote[] = mutreeNotes.map((note) => ({
-      x: note.x,
-      y: note.y,
-      length: note.length,
-    }));
+    // stringifiy data as a string e.g. "x:y:length,x:y:length,..."
+    const data = mutreeNotes.map((note) => `${note.x}:${note.y}:${note.length}`).join(',');
 
-    localStorage.setItem(CONSTANTS[layer].localStorageKey, JSON.stringify(data));
+    localStorage.setItem(CONSTANTS[layer].localStorageKey, data);
   }, [mutreeNotes, isIntializedByUrl]);
 
   React.useEffect(() => {
@@ -376,10 +373,8 @@ export default function useMutreeNotes({ layer, unitHeight, audio, keys }: Props
       return;
     }
 
-    const decoded: LocalStorageNote[] = JSON.parse(atob(encoded));
-
-    const newNotes: MutreeNote[] = decoded.map((note) => {
-      const { x, y, length } = note;
+    const newNotes: MutreeNote[] = encoded.split(',').map((note) => {
+      const [x, y, length] = note.split(':').map(Number);
       return {
         id: getNoteId(),
         x,

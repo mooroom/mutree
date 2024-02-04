@@ -46,6 +46,4 @@ export interface MutreeNote {
   isAI?: boolean;
 }
 
-export type LocalStorageNote = Omit<MutreeNote, 'id' | 'isSelected' | 'isAI'>;
-
 export type MouseControl = keyof typeof MOUSE_CONTROL_OPTIONS;

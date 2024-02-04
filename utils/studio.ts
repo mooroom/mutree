@@ -85,12 +85,8 @@ export const makeUrlFromLocalStorage = () => {
   const melodyMutreeNotes = localStorage.getItem('melody-roll-notes');
   const rhythmMutreeNotes = localStorage.getItem('rhythm-roll-notes');
 
-  // parse array data and encode
-  const encodedMelody = melodyMutreeNotes ? btoa(melodyMutreeNotes) : btoa('[]');
-  const encodedRhythm = rhythmMutreeNotes ? btoa(rhythmMutreeNotes) : btoa('[]');
-
   // make url
-  const url = `${window.location.origin}/studio?melody=${encodedMelody}&rhythm=${encodedRhythm}`;
+  const url = `${window.location.origin}/studio?melody=${melodyMutreeNotes}&rhythm=${rhythmMutreeNotes}`;
 
   return url;
 };
