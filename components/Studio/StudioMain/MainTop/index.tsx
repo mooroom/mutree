@@ -29,7 +29,7 @@ export default function MainTop() {
             color={value1}
             onClick={() => toggle1()}
           >
-            가락
+            멜로디
           </Button>
           <Button
             size="xs"

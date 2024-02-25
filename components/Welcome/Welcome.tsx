@@ -43,13 +43,13 @@ const TutorialCard = ({ number, title, isBeta, image, description }: TutorialCar
 const tutorials = [
   {
     number: 1,
-    title: '가락과 리듬으로 음악 만들기',
+    title: '멜로디와 리듬으로 음악 만들기',
     image: '/tutorials/images/num1.png',
     description: (
       <>
-        가락과 리듬을 조합하여 나만의 음악을 만들어보세요. 마우스 클릭으로 오디오 이벤트를 추가하고
-        드래그로 위치와 길이를 조절할 수 있습니다. 어떤 조합이 가장 멋진 음악을 만들까요? 여러분의
-        상상력을 발휘해보세요!
+        멜로디와 리듬을 조합하여 나만의 음악을 만들어보세요. 마우스 클릭으로 오디오 이벤트를
+        추가하고 드래그로 위치와 길이를 조절할 수 있습니다. 어떤 조합이 가장 멋진 음악을 만들까요?
+        여러분의 상상력을 발휘해보세요!
       </>
     ),
   },
@@ -63,7 +63,7 @@ const tutorials = [
     image: '/tutorials/images/num2.png',
     description: (
       <>
-        추가한 가락과 리듬을 들어보고 수정해보세요. <Code>Shift</Code> 키를 누르면 한번에 여러개의
+        추가한 멜로디와 리듬을 들어보고 수정해보세요. <Code>Shift</Code> 키를 누르면 한번에 여러개의
         오디오 이벤트를 선택하고 드래그로 위치와 길이를 조절할 수 있습니다.{' '}
         <Code>Alt / Option</Code> 키를 누른 채로 드래그하면 복사가 가능하고, <Code>Delete</Code>{' '}
         키로 선택한 오디오 이벤트를 삭제할 수 있습니다.
@@ -94,13 +94,13 @@ const tutorials = [
   },
   {
     number: 5,
-    title: 'AI로 가락 생성하기',
+    title: 'AI로 멜로디 생성하기',
     isBeta: true,
     image: '/tutorials/images/num5.png',
     description: (
       <>
-        뮤트리 AI로 가락을 생성해보세요. AI는 여러분이 만든 가락을 분석하여 새로운 가락을
-        생성합니다. AI로 생성된 가락은 여러분이 만든 가락과 조합하여 멋진 음악을 만들 수 있습니다.
+        뮤트리 AI로 멜로디를 생성해보세요. AI는 여러분이 만든 멜로디를 분석하여 새로운 멜로디를
+        생성합니다. AI로 생성된 멜로디는 여러분의 멜로디와 조합하여 더욱 멋진 소리를 들려줍니다.
       </>
     ),
   },
